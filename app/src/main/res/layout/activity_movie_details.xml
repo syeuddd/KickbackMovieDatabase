@@ -8,10 +8,6 @@
     tools:context="com.leafnext.kickbackmoviedatabase.Movie_Details_Activity">
 
 
-    <fragment
-        android:id="@+id/movieDetailsFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:name="com.leafnext.kickbackmoviedatabase.MovieDetailsFragment"/>
+
 
 </android.support.constraint.ConstraintLayout>
