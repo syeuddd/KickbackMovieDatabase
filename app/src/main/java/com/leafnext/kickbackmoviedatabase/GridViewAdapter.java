@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -26,6 +27,7 @@ public class GridViewAdapter extends RecyclerView.Adapter<GridViewAdapter.MyView
 
     ArrayList<MovieInfo> mMovieInfoArrayList;
     Context mContext;
+    private OnItemSelectedListener mListener;
 
 
     public GridViewAdapter(Context context, ArrayList<MovieInfo> movieInfo){
@@ -44,6 +46,8 @@ public class GridViewAdapter extends RecyclerView.Adapter<GridViewAdapter.MyView
         View rootView = LayoutInflater.from(mContext).inflate(R.layout.grid_view_list_items,parent,false);
 
         MyViewHolder viewHolder = new MyViewHolder(rootView,mMovieInfoArrayList);
+
+        mListener = (OnItemSelectedListener)mContext;
 
         return viewHolder;
 
@@ -68,17 +72,7 @@ public class GridViewAdapter extends RecyclerView.Adapter<GridViewAdapter.MyView
             @Override
             public void onClick(View v) {
 
-                MovieDetailsFragment detailsFragment = new MovieDetailsFragment();
-                Bundle args = new Bundle();
-                args.putString("position",mMovieInfoArrayList.get(position).getOriginalTitle());
-
-                detailsFragment.setArguments(args);
-
-                FragmentTransaction fragmentTransaction = ((FragmentActivity)mContext).getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.replace(R.id.movieDetailsFragment,detailsFragment);
-                fragmentTransaction.commit();
-
-                Toast.makeText(mContext,"item has been clicked",Toast.LENGTH_SHORT).show();
+                mListener.onMovieItemSelected(position, mMovieInfoArrayList.get(position));
             }
         });
 
@@ -100,6 +94,12 @@ public class GridViewAdapter extends RecyclerView.Adapter<GridViewAdapter.MyView
 
             mImageView = (ImageView) itemView.findViewById(R.id.gridIconView);
         }
+
+    }
+
+    public interface OnItemSelectedListener{
+
+        void onMovieItemSelected(int position, MovieInfo info);
 
     }
 
