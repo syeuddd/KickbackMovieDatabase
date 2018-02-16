@@ -1,10 +1,12 @@
 package com.leafnext.kickbackmoviedatabase;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.ShareCompat.IntentBuilder;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,7 +54,9 @@ public class GridViewAdapter extends RecyclerView.Adapter<GridViewAdapter.MyView
     @Override
     public void onBindViewHolder(MyViewHolder holder, final int position) {
 
-        String imageUrl = mMovieInfoArrayList.get(position).getThumbnailImage();
+        final MovieInfo selectedMovie = mMovieInfoArrayList.get(position);
+
+        String imageUrl = selectedMovie.getThumbnailImage();
 
         String baseUrl = "http://image.tmdb.org/t/p/w780";
 
@@ -68,17 +72,10 @@ public class GridViewAdapter extends RecyclerView.Adapter<GridViewAdapter.MyView
             @Override
             public void onClick(View v) {
 
-                MovieDetailsFragment detailsFragment = new MovieDetailsFragment();
-                Bundle args = new Bundle();
-                args.putString("position",mMovieInfoArrayList.get(position).getOriginalTitle());
+                Intent movieDetailsIntent = new Intent(mContext,Movie_Details_Activity.class);
+                movieDetailsIntent.putExtra("movieDetails",selectedMovie);
+                mContext.startActivity(movieDetailsIntent);
 
-                detailsFragment.setArguments(args);
-
-                FragmentTransaction fragmentTransaction = ((FragmentActivity)mContext).getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.replace(R.id.movieDetailsFragment,detailsFragment);
-                fragmentTransaction.commit();
-
-                Toast.makeText(mContext,"item has been clicked",Toast.LENGTH_SHORT).show();
             }
         });
 

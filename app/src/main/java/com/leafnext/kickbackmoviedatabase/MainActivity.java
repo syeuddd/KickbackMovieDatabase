@@ -18,7 +18,7 @@ import java.net.URL;
 import java.util.ArrayList;
 
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity {
 
 
     ArrayList<MovieInfo> movieInfoArrayList;
@@ -85,6 +85,7 @@ public class MainActivity extends AppCompatActivity{
                     String movieOverview = eachMovieJson.getString("overview");
                     String movieReleaseDate = eachMovieJson.getString("release_date");
                     String movieThumbnailImage = eachMovieJson.getString("backdrop_path");
+                    String moveVoteAverage = eachMovieJson.getString("vote_average");
 
                     MovieInfo eachMovieInfo = new MovieInfo();
 
@@ -93,6 +94,7 @@ public class MainActivity extends AppCompatActivity{
                     eachMovieInfo.setOverview(movieOverview);
                     eachMovieInfo.setReleaseDate(movieReleaseDate);
                     eachMovieInfo.setThumbnailImage(movieThumbnailImage);
+                    eachMovieInfo.setVoteAverage(moveVoteAverage);
 
                     movieInfos.add(eachMovieInfo);
             }

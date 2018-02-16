@@ -1,19 +1,29 @@
 package com.leafnext.kickbackmoviedatabase.model;
 
+import android.os.Parcel;
+import android.os.Parcelable.Creator;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 
 /**
  * Created by syedehteshamuddin on 2018-02-07.
  */
 
-public class MovieInfo {
+public class MovieInfo implements android.os.Parcelable {
 
     private String originalTitle;
     private String poster;
     private String overview;
     private String releaseDate;
     private String thumbnailImage;
+    private String voteAverage;
 
+    public String getVoteAverage() {
+        return voteAverage;
+    }
+
+    public void setVoteAverage(String voteAverage) {
+        this.voteAverage = voteAverage;
+    }
 
     public String getOriginalTitle() {
         return originalTitle;
@@ -56,5 +66,42 @@ public class MovieInfo {
     }
 
 
+    public MovieInfo() {
+    }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.originalTitle);
+        dest.writeString(this.poster);
+        dest.writeString(this.overview);
+        dest.writeString(this.releaseDate);
+        dest.writeString(this.thumbnailImage);
+        dest.writeString(this.voteAverage);
+    }
+
+    protected MovieInfo(Parcel in) {
+        this.originalTitle = in.readString();
+        this.poster = in.readString();
+        this.overview = in.readString();
+        this.releaseDate = in.readString();
+        this.thumbnailImage = in.readString();
+        this.voteAverage = in.readString();
+    }
+
+    public static final Creator<MovieInfo> CREATOR = new Creator<MovieInfo>() {
+        @Override
+        public MovieInfo createFromParcel(Parcel source) {
+            return new MovieInfo(source);
+        }
+
+        @Override
+        public MovieInfo[] newArray(int size) {
+            return new MovieInfo[size];
+        }
+    };
 }
