@@ -21,7 +21,7 @@ public class NetworkUtils {
 
     private static final String API_KEY_PARAMETER="api_key";
 
-    private static final String API_KEY = "d1cd092a990783ac43ec54e4c4009145";
+    private static final String API_KEY = "PLEASE INSERT API KEY HERE";
 
 
 
