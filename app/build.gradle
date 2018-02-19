@@ -5,7 +5,7 @@ android {
     buildToolsVersion "27.0.0"
     defaultConfig {
         applicationId "com.leafnext.kickbackmoviedatabase"
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
@@ -19,6 +19,15 @@ android {
     }
 }
 
+allprojects {
+    repositories {
+        jcenter()
+        maven {
+            url "https://maven.google.com"
+        }
+    }
+}
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
@@ -27,9 +36,8 @@ dependencies {
 
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'com.android.support:appcompat-v7:26.+'
+    compile 'com.android.support:appcompat-v7:26.1.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'com.android.support:recyclerview-v7:26.+'
-    compile 'com.android.support:cardview-v7:26.+'
+    compile 'com.android.support:recyclerview-v7:26.1.0'
     testCompile 'junit:junit:4.12'
 }

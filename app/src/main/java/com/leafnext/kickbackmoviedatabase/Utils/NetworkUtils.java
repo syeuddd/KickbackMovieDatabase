@@ -9,25 +9,17 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Scanner;
 
-/**
- * Created by syedehteshamuddin on 2018-02-07.
- */
-
 public class NetworkUtils {
 
-    private static final String TAG = NetworkUtils.class.getSimpleName();
 
-    private static final String IMAGE_BASE_URL = "https://image.tmdb.org/t/p/";
 
     private static final String MOVIE_BASE_URL = "https://api.themoviedb.org/3/movie/";
-
-    private static final String IMAGE_SIZE = "w185";
 
     public static final String TOP_RATED_MOVIES = "top_rated";
 
     public static final String POPULAR_MOVIES = "popular";
 
-    public static final String API_KEY_PARAMETER="api_key";
+    private static final String API_KEY_PARAMETER="api_key";
 
     private static final String API_KEY = "d1cd092a990783ac43ec54e4c4009145";
 

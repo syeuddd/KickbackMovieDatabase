@@ -2,13 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:title="Popular movies"
+    <item android:title="@string/popular_movies"
           android:id="@+id/popularMovies"
           app:showAsAction="never"/>
 
 
     <item   android:id="@+id/topMovies"
-            android:title="Top Rated Movies"
+            android:title="@string/top_rated_movies"
             app:showAsAction="never"/>
 
 </menu>

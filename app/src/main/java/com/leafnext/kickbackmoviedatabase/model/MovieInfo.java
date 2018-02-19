@@ -1,12 +1,7 @@
 package com.leafnext.kickbackmoviedatabase.model;
 
 import android.os.Parcel;
-import android.os.Parcelable.Creator;
-import android.support.v7.widget.RecyclerView.ViewHolder;
 
-/**
- * Created by syedehteshamuddin on 2018-02-07.
- */
 
 public class MovieInfo implements android.os.Parcelable {
 
@@ -84,7 +79,7 @@ public class MovieInfo implements android.os.Parcelable {
         dest.writeString(this.voteAverage);
     }
 
-    protected MovieInfo(Parcel in) {
+    private MovieInfo(Parcel in) {
         this.originalTitle = in.readString();
         this.poster = in.readString();
         this.overview = in.readString();

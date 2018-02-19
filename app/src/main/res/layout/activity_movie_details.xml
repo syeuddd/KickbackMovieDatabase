@@ -16,30 +16,46 @@
         android:id="@+id/movieOriginalTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"/>
+        android:layout_weight="1"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:padding="8dp"/>
+
+    <TextView
+        android:id="@+id/movieReleaseDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textSize="16sp"
+        android:padding="8dp"/>
+
 
     <ImageView
+        android:layout_gravity="center"
         android:id="@+id/moviePoster"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:scaleType="centerCrop"
         android:layout_weight="1"/>
-    <TextView
-        android:id="@+id/movieOverview"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"/>
+
     <TextView
         android:id="@+id/movieUserRating"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"/>
+        android:layout_weight="1"
+        android:textSize="16sp"
+        android:padding="8dp"/>
+
     <TextView
-        android:id="@+id/movieReleaseDate"
+        android:id="@+id/movieOverview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"/>
+        android:layout_weight="1"
+        android:textSize="16sp"
+        android:padding="8dp"
+        android:textStyle="italic"/>
 
 
 </LinearLayout>
+
 </ScrollView>
