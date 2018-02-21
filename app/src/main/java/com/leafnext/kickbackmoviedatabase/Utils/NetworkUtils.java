@@ -2,6 +2,8 @@ package com.leafnext.kickbackmoviedatabase.Utils;
 
 import android.net.Uri;
 
+import com.leafnext.kickbackmoviedatabase.BuildConfig;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -21,15 +23,13 @@ public class NetworkUtils {
 
     private static final String API_KEY_PARAMETER="api_key";
 
-    private static final String API_KEY = "PLEASE INSERT API KEY HERE";
-
 
 
 public static URL buildUrl(String query){
 
     Uri builtUri = Uri.parse(MOVIE_BASE_URL).buildUpon()
             .appendPath(query)
-            .appendQueryParameter(API_KEY_PARAMETER,API_KEY)
+            .appendQueryParameter(API_KEY_PARAMETER, BuildConfig.API_KEY)
             .build();
 
     URL url = null;

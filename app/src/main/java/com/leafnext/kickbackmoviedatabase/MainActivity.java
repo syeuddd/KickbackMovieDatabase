@@ -1,6 +1,7 @@
 package com.leafnext.kickbackmoviedatabase;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -14,6 +15,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+
+import com.leafnext.kickbackmoviedatabase.FetchMovieAsyncTask.OnTaskCompleted;
 import com.leafnext.kickbackmoviedatabase.Utils.NetworkUtils;
 import com.leafnext.kickbackmoviedatabase.model.MovieInfo;
 import org.json.JSONArray;
@@ -25,12 +28,11 @@ import java.net.URL;
 import java.util.ArrayList;
 
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity implements OnTaskCompleted{
 
 
     private ProgressBar bar;
     private GridViewAdapter gridViewAdapter;
-
 
 
     @Override
@@ -46,9 +48,18 @@ public class MainActivity extends AppCompatActivity{
 
         bar =  findViewById(R.id.progressBar);
 
-        recyclerView.setLayoutManager(new GridLayoutManager(this,3));
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
+
+            recyclerView.setLayoutManager(new GridLayoutManager(this,2));
+
+        }else {
+
+            recyclerView.setLayoutManager(new GridLayoutManager(this,4));
+        }
 
         fetchMovies(NetworkUtils.TOP_RATED_MOVIES);
+
+        isDevicedConnectedToInternet();
 
     }
 
@@ -57,83 +68,13 @@ public class MainActivity extends AppCompatActivity{
         URL url = NetworkUtils.buildUrl(sortType);
 
         if (isDevicedConnected()){
-            new fetchData().execute(url);
+            FetchMovieAsyncTask task = new FetchMovieAsyncTask(this,bar);
+            task.execute(url);
         }else {
             Toast.makeText(this, R.string.noInternetErrorMessage,Toast.LENGTH_SHORT).show();
         }
-
-
     }
 
-
-    private class fetchData extends AsyncTask<URL,Void,ArrayList<MovieInfo>>{
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            bar.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        protected ArrayList<MovieInfo> doInBackground(URL... params) {
-
-            ArrayList<MovieInfo> movieInfos = new ArrayList<>();
-            try {
-
-
-                String response = NetworkUtils.getResponseFromHttpUrl(params[0]);
-
-                if (response != null){
-                    JSONObject movieDatabaseResult = new JSONObject(response);
-                    JSONArray resultsArray = movieDatabaseResult.getJSONArray("results");
-                    for (int i=0; i<resultsArray.length(); i++){
-
-                        JSONObject eachMovieJson = resultsArray.getJSONObject(i);
-
-                        String movieTitle = eachMovieJson.getString("original_title");
-                        String moviePoster = eachMovieJson.getString("poster_path");
-                        String movieOverview = eachMovieJson.getString("overview");
-                        String movieReleaseDate = eachMovieJson.getString("release_date");
-                        String movieThumbnailImage = eachMovieJson.getString("backdrop_path");
-                        String moveVoteAverage = eachMovieJson.getString("vote_average");
-
-                        MovieInfo eachMovieInfo = new MovieInfo();
-
-                        eachMovieInfo.setOriginalTitle(movieTitle);
-                        eachMovieInfo.setPoster(moviePoster);
-                        eachMovieInfo.setOverview(movieOverview);
-                        eachMovieInfo.setReleaseDate(movieReleaseDate);
-                        eachMovieInfo.setThumbnailImage(movieThumbnailImage);
-                        eachMovieInfo.setVoteAverage(moveVoteAverage);
-
-                        movieInfos.add(eachMovieInfo);
-                    }
-                }else {
-                    return null;
-                }
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-
-            return movieInfos;
-
-        }
-
-
-        @Override
-        protected void onPostExecute(ArrayList<MovieInfo> movieInfos) {
-
-            if (movieInfos!= null) {
-                super.onPostExecute(movieInfos);
-                bar.setVisibility(View.INVISIBLE);
-                gridViewAdapter.setData(movieInfos);
-            }
-        }
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -170,5 +111,31 @@ public class MainActivity extends AppCompatActivity{
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
 
         return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+    }
+
+    private boolean isDevicedConnectedToInternet(){
+
+        try {
+        Process p1 = Runtime.getRuntime().exec("ping -c 1 www.google.com");
+            int returnVal = p1.waitFor();
+            boolean reachable = (returnVal == 0);
+            if (reachable){
+                System.out.println("Internet access");
+                return reachable;
+            }else {
+                System.out.println("No Internet access");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    @Override
+    public void onTaskCompleted(ArrayList<MovieInfo> response) {
+         gridViewAdapter.setData(response);
     }
 }
