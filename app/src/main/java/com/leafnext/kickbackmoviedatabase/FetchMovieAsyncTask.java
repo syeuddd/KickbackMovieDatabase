@@ -62,7 +62,7 @@ public class FetchMovieAsyncTask extends AsyncTask <URL,Void,ArrayList<MovieInfo
                     MovieInfo eachMovieInfo = new MovieInfo();
 
                     eachMovieInfo.setOriginalTitle(movieTitle);
-                    eachMovieInfo.setPoster(moviePoster);
+                    eachMovieInfo.setPosterImage(moviePoster);
                     eachMovieInfo.setOverview(movieOverview);
                     eachMovieInfo.setReleaseDate(movieReleaseDate);
                     eachMovieInfo.setThumbnailImage(movieThumbnailImage);

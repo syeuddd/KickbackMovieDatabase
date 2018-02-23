@@ -1,7 +1,7 @@
 package com.leafnext.kickbackmoviedatabase;
 
 import android.content.Context;
-import android.content.res.Configuration;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -16,8 +16,11 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.leafnext.kickbackmoviedatabase.FetchMovieAsyncTask.OnTaskCompleted;
+import com.facebook.stetho.DumperPluginsProvider;
+import com.facebook.stetho.Stetho;
+import com.facebook.stetho.dumpapp.DumperPlugin;
 import com.leafnext.kickbackmoviedatabase.Utils.NetworkUtils;
+import com.leafnext.kickbackmoviedatabase.database.MovieDatabaseHelper;
 import com.leafnext.kickbackmoviedatabase.model.MovieInfo;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -28,17 +31,23 @@ import java.net.URL;
 import java.util.ArrayList;
 
 
-public class MainActivity extends AppCompatActivity implements OnTaskCompleted{
+public class MainActivity extends AppCompatActivity{
 
 
     private ProgressBar bar;
     private GridViewAdapter gridViewAdapter;
+    private SQLiteDatabase mDb;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        MovieDatabaseHelper db = new MovieDatabaseHelper(this);
+
+        mDb = db.getWritableDatabase();
 
         gridViewAdapter  = new GridViewAdapter(MainActivity.this);
 
@@ -48,18 +57,11 @@ public class MainActivity extends AppCompatActivity implements OnTaskCompleted{
 
         bar =  findViewById(R.id.progressBar);
 
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
-
-            recyclerView.setLayoutManager(new GridLayoutManager(this,2));
-
-        }else {
-
-            recyclerView.setLayoutManager(new GridLayoutManager(this,4));
-        }
+        recyclerView.setLayoutManager(new GridLayoutManager(this,3));
 
         fetchMovies(NetworkUtils.TOP_RATED_MOVIES);
 
-        isDevicedConnectedToInternet();
+        Stetho.initializeWithDefaults(this);
 
     }
 
@@ -68,13 +70,83 @@ public class MainActivity extends AppCompatActivity implements OnTaskCompleted{
         URL url = NetworkUtils.buildUrl(sortType);
 
         if (isDevicedConnected()){
-            FetchMovieAsyncTask task = new FetchMovieAsyncTask(this,bar);
-            task.execute(url);
+            new fetchData().execute(url);
         }else {
             Toast.makeText(this, R.string.noInternetErrorMessage,Toast.LENGTH_SHORT).show();
         }
+
+
     }
 
+
+    private class fetchData extends AsyncTask<URL,Void,ArrayList<MovieInfo>>{
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            bar.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        protected ArrayList<MovieInfo> doInBackground(URL... params) {
+
+            ArrayList<MovieInfo> movieInfos = new ArrayList<>();
+            try {
+
+
+                String response = NetworkUtils.getResponseFromHttpUrl(params[0]);
+
+                if (response != null){
+                    JSONObject movieDatabaseResult = new JSONObject(response);
+                    JSONArray resultsArray = movieDatabaseResult.getJSONArray("results");
+                    for (int i=0; i<resultsArray.length(); i++){
+
+                        JSONObject eachMovieJson = resultsArray.getJSONObject(i);
+
+                        String movieTitle = eachMovieJson.getString("original_title");
+                        String moviePoster = eachMovieJson.getString("poster_path");
+                        String movieOverview = eachMovieJson.getString("overview");
+                        String movieReleaseDate = eachMovieJson.getString("release_date");
+                        String movieThumbnailImage = eachMovieJson.getString("backdrop_path");
+                        String moveVoteAverage = eachMovieJson.getString("vote_average");
+
+                        MovieInfo eachMovieInfo = new MovieInfo();
+
+                        eachMovieInfo.setOriginalTitle(movieTitle);
+                        eachMovieInfo.setPosterImage(moviePoster);
+                        eachMovieInfo.setOverview(movieOverview);
+                        eachMovieInfo.setReleaseDate(movieReleaseDate);
+                        eachMovieInfo.setThumbnailImage(movieThumbnailImage);
+                        eachMovieInfo.setVoteAverage(moveVoteAverage);
+
+                        movieInfos.add(eachMovieInfo);
+                    }
+                }else {
+                    return null;
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+
+            return movieInfos;
+
+        }
+
+
+        @Override
+        protected void onPostExecute(ArrayList<MovieInfo> movieInfos) {
+
+            if (movieInfos!= null) {
+                super.onPostExecute(movieInfos);
+                bar.setVisibility(View.INVISIBLE);
+                gridViewAdapter.setData(movieInfos);
+            }
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -111,31 +183,5 @@ public class MainActivity extends AppCompatActivity implements OnTaskCompleted{
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
 
         return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
-    }
-
-    private boolean isDevicedConnectedToInternet(){
-
-        try {
-        Process p1 = Runtime.getRuntime().exec("ping -c 1 www.google.com");
-            int returnVal = p1.waitFor();
-            boolean reachable = (returnVal == 0);
-            if (reachable){
-                System.out.println("Internet access");
-                return reachable;
-            }else {
-                System.out.println("No Internet access");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        return false;
-    }
-
-    @Override
-    public void onTaskCompleted(ArrayList<MovieInfo> response) {
-         gridViewAdapter.setData(response);
     }
 }

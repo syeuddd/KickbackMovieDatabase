@@ -44,7 +44,7 @@ public class Movie_Details_Activity extends AppCompatActivity {
 
             Uri baseUri = Uri.parse(baseUrl);
 
-            Uri uri = Uri.withAppendedPath(baseUri,selectedMovieDetails.getPoster());
+            Uri uri = Uri.withAppendedPath(baseUri,selectedMovieDetails.getPosterImage());
 
             Picasso.with(this)
                     .load(uri)
