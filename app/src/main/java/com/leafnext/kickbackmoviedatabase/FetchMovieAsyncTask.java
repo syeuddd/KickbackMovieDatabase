@@ -52,12 +52,14 @@ public class FetchMovieAsyncTask extends AsyncTask <URL,Void,ArrayList<MovieInfo
 
                     JSONObject eachMovieJson = resultsArray.getJSONObject(i);
 
+                    String movieId = eachMovieJson.getString("id");
                     String movieTitle = eachMovieJson.getString("original_title");
                     String moviePoster = eachMovieJson.getString("poster_path");
                     String movieOverview = eachMovieJson.getString("overview");
                     String movieReleaseDate = eachMovieJson.getString("release_date");
                     String movieThumbnailImage = eachMovieJson.getString("backdrop_path");
                     String moveVoteAverage = eachMovieJson.getString("vote_average");
+
 
                     MovieInfo eachMovieInfo = new MovieInfo();
 
@@ -67,6 +69,7 @@ public class FetchMovieAsyncTask extends AsyncTask <URL,Void,ArrayList<MovieInfo
                     eachMovieInfo.setReleaseDate(movieReleaseDate);
                     eachMovieInfo.setThumbnailImage(movieThumbnailImage);
                     eachMovieInfo.setVoteAverage(moveVoteAverage);
+                    eachMovieInfo.setMovieId(movieId);
 
                     movieInfos.add(eachMovieInfo);
                 }

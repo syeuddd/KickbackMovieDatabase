@@ -23,11 +23,14 @@ public class NetworkUtils {
 
     private static final String API_KEY_PARAMETER="api_key";
 
+    public static final String MOVIE_TRAILERS = "videos";
+
+    public static final String MOVIE_REVIEWS = "reviews";
 
 
-public static URL buildUrl(String query){
+    public static URL buildUrl(String query){
 
-    Uri builtUri = Uri.parse(MOVIE_BASE_URL).buildUpon()
+    Uri uri = Uri.parse(MOVIE_BASE_URL).buildUpon()
             .appendPath(query)
             .appendQueryParameter(API_KEY_PARAMETER, BuildConfig.API_KEY)
             .build();
@@ -35,17 +38,54 @@ public static URL buildUrl(String query){
     URL url = null;
 
     try{
-        url = new URL(builtUri.toString());
+        url = new URL(uri.toString());
     } catch (MalformedURLException e) {
         e.printStackTrace();
     }
 
     return url;
 
+    }
+
+    public static URL getMoreMovieDetails(String movieId, String detailType){
+
+    if (detailType==null){
+
+        Uri uri = Uri.parse(MOVIE_BASE_URL).buildUpon()
+                .appendPath(movieId)
+                .appendQueryParameter(API_KEY_PARAMETER,BuildConfig.API_KEY)
+                .build();
+
+        URL url = null;
+
+        try{
+            url = new URL(uri.toString());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        return url;
+    }
+
+    Uri uri = Uri.parse(MOVIE_BASE_URL).buildUpon()
+            .appendPath(movieId)
+            .appendPath(detailType)
+            .appendQueryParameter(API_KEY_PARAMETER,BuildConfig.API_KEY)
+            .build();
+
+    URL url = null;
+
+    try{
+        url = new URL(uri.toString());
+    } catch (MalformedURLException e) {
+        e.printStackTrace();
+    }
+
+    return url;
 }
 
 
-public static String getResponseFromHttpUrl(URL url) throws IOException{
+    public static String getResponseFromHttpUrl(URL url) throws IOException{
 
     HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 

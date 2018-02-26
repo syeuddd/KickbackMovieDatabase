@@ -2,6 +2,7 @@ package com.leafnext.kickbackmoviedatabase;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -18,12 +19,14 @@ import java.util.ArrayList;
 
     private ArrayList<MovieInfo> mMovieInfoArrayList;
     private Context mContext;
+    private SQLiteDatabase favouriteDatabase;
 
 
 
-     GridViewAdapter(Context context){
+     GridViewAdapter(Context context, SQLiteDatabase database){
 
         mContext = context;
+        favouriteDatabase = database;
 
     }
 

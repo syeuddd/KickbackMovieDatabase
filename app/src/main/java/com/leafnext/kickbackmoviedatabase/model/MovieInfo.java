@@ -2,9 +2,12 @@ package com.leafnext.kickbackmoviedatabase.model;
 
 import android.os.Parcel;
 
+import java.util.ArrayList;
+
 
 public class MovieInfo implements android.os.Parcelable {
 
+    private String movieId;
     private String originalTitle;
     private String posterImage;
     private String movieLength;
@@ -12,9 +15,32 @@ public class MovieInfo implements android.os.Parcelable {
     private String releaseDate;
     private String thumbnailImage;
     private String voteAverage;
-    private String trailer1;
-    private String trailer2;
-    private String trailer3;
+    private ArrayList<String> trailers;
+    private ArrayList<String> reviews;
+
+    public ArrayList<String> getTrailers() {
+        return trailers;
+    }
+
+    public void setTrailers(ArrayList<String> trailers) {
+        this.trailers = trailers;
+    }
+
+    public ArrayList<String> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(ArrayList<String> reviews) {
+        this.reviews = reviews;
+    }
+
+    public String getMovieId() {
+        return movieId;
+    }
+
+    public void setMovieId(String movieId) {
+        this.movieId = movieId;
+    }
 
     public String getMovieLength() {
         return movieLength;
@@ -24,29 +50,6 @@ public class MovieInfo implements android.os.Parcelable {
         this.movieLength = movieLength;
     }
 
-    public String getTrailer1() {
-        return trailer1;
-    }
-
-    public void setTrailer1(String trailer1) {
-        this.trailer1 = trailer1;
-    }
-
-    public String getTrailer2() {
-        return trailer2;
-    }
-
-    public void setTrailer2(String trailer2) {
-        this.trailer2 = trailer2;
-    }
-
-    public String getTrailer3() {
-        return trailer3;
-    }
-
-    public void setTrailer3(String trailer3) {
-        this.trailer3 = trailer3;
-    }
 
     public String getVoteAverage() {
         return voteAverage;
@@ -107,6 +110,7 @@ public class MovieInfo implements android.os.Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.movieId);
         dest.writeString(this.originalTitle);
         dest.writeString(this.posterImage);
         dest.writeString(this.movieLength);
@@ -114,12 +118,12 @@ public class MovieInfo implements android.os.Parcelable {
         dest.writeString(this.releaseDate);
         dest.writeString(this.thumbnailImage);
         dest.writeString(this.voteAverage);
-        dest.writeString(this.trailer1);
-        dest.writeString(this.trailer2);
-        dest.writeString(this.trailer3);
+        dest.writeStringList(this.trailers);
+        dest.writeStringList(this.reviews);
     }
 
     protected MovieInfo(Parcel in) {
+        this.movieId = in.readString();
         this.originalTitle = in.readString();
         this.posterImage = in.readString();
         this.movieLength = in.readString();
@@ -127,9 +131,8 @@ public class MovieInfo implements android.os.Parcelable {
         this.releaseDate = in.readString();
         this.thumbnailImage = in.readString();
         this.voteAverage = in.readString();
-        this.trailer1 = in.readString();
-        this.trailer2 = in.readString();
-        this.trailer3 = in.readString();
+        this.trailers = in.createStringArrayList();
+        this.reviews = in.createStringArrayList();
     }
 
     public static final Creator<MovieInfo> CREATOR = new Creator<MovieInfo>() {
