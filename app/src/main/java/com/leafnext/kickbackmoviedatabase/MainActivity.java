@@ -17,9 +17,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.facebook.stetho.DumperPluginsProvider;
 import com.facebook.stetho.Stetho;
-import com.facebook.stetho.dumpapp.DumperPlugin;
 import com.leafnext.kickbackmoviedatabase.FetchMovieAsyncTask.OnTaskCompleted;
 import com.leafnext.kickbackmoviedatabase.Utils.NetworkUtils;
 import com.leafnext.kickbackmoviedatabase.database.MovieDatabaseHelper;
@@ -71,6 +69,7 @@ public class MainActivity extends AppCompatActivity implements OnTaskCompleted{
         fetchMovies(NetworkUtils.TOP_RATED_MOVIES);
 
         Stetho.initializeWithDefaults(this);
+
 
     }
 
