@@ -46,7 +46,7 @@ public class Movie_Details_Activity extends AppCompatActivity implements OnTaskC
 
         trailerRecyclerView.setAdapter(mTrailerViewAdapter);
 
-        LinearLayoutManager trailerViewmanager= new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
+        LinearLayoutManager trailerViewmanager= new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false);
 
         trailerRecyclerView.setLayoutManager(trailerViewmanager);
 

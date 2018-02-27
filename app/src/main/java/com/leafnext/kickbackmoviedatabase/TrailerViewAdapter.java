@@ -1,6 +1,9 @@
 package com.leafnext.kickbackmoviedatabase;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,7 +37,7 @@ public class TrailerViewAdapter extends RecyclerView.Adapter<TrailerViewAdapter.
     @Override
     public TrailerViewAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        View rootView = LayoutInflater.from(mContext).inflate(R.layout.trailer_item_view,parent,false);
+        View rootView = LayoutInflater.from(mContext).inflate(R.layout.trailer_item_view_horizontal,parent,false);
 
         return new MyViewHolder(rootView);
     }
@@ -42,13 +45,13 @@ public class TrailerViewAdapter extends RecyclerView.Adapter<TrailerViewAdapter.
     @Override
     public void onBindViewHolder(TrailerViewAdapter.MyViewHolder holder, int position) {
 
-         final String trailer = mTrailerList.get(position);
+         final String trailerid = mTrailerList.get(position);
 
          holder.trailerView.setText("Trailer "+ (position+1));
          holder.itemView.setOnClickListener(new OnClickListener() {
              @Override
              public void onClick(View v) {
-                 Toast.makeText(mContext,trailer,Toast.LENGTH_SHORT).show();
+                 watchVideoYoutube(mContext,trailerid);
              }
          });
 
@@ -74,4 +77,17 @@ public class TrailerViewAdapter extends RecyclerView.Adapter<TrailerViewAdapter.
            trailerView = itemView.findViewById(R.id.trailerTitle);
         }
     }
+
+    public void watchVideoYoutube(Context context, String id){
+
+        Intent localAppIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:" + id));
+        Intent webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com/watch?v=" + id));
+        try {
+            context.startActivity(localAppIntent);
+        }catch (ActivityNotFoundException ex){
+            context.startActivity(webIntent);
+        }
+    }
+
+
 }

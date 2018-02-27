@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.leafnext.kickbackmoviedatabase.Utils.ResizeTextView;
+
 import java.util.ArrayList;
 
 /**
@@ -42,9 +44,23 @@ public class ReviewViewAdapter extends RecyclerView.Adapter<ReviewViewAdapter.My
     @Override
     public void onBindViewHolder(ReviewViewAdapter.MyViewHolder holder, int position) {
 
-         String trailer = mTrailerList.get(position);
-
+         final String trailer = mTrailerList.get(position);
          holder.trailerView.setText(trailer);
+         holder.itemView.setOnClickListener(new OnClickListener() {
+             @Override
+             public void onClick(View view) {
+
+
+
+
+             }
+         });
+
+
+
+
+
+
 
 
     }

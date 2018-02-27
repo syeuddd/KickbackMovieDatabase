@@ -31,7 +31,6 @@
         android:id="@+id/movieOriginalTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
         android:textSize="32sp"
         android:padding="24dp"
         tools:text="Chappie"
@@ -121,26 +120,20 @@
 
 </LinearLayout>
 
-  <RelativeLayout
-      android:id="@+id/overviewLayout"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_below="@+id/splitLayout">
+    <TextView
+        android:id="@+id/movieOverview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:layout_below="@id/splitLayout"
+        android:layout_marginBottom="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginLeft="8dp"/>
 
-      <TextView
-          android:id="@+id/movieOverview"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:textSize="16sp"
-          android:layout_marginBottom="8dp"
-          android:layout_marginRight="8dp"
-          android:layout_marginLeft="8dp"/>
-
-
-  </RelativeLayout>
 
     <View
-        android:layout_below="@id/overviewLayout"
+        android:layout_below="@id/movieOverview"
+        android:id="@+id/trailerViewDivider"
         android:layout_margin="8dp"
         android:layout_width="match_parent"
         android:layout_height="1dp"
@@ -148,12 +141,19 @@
 
     <android.support.v7.widget.RecyclerView
         android:layout_margin="8dp"
-        android:layout_below="@id/overviewLayout"
+        android:layout_below="@id/trailerViewDivider"
         android:id="@+id/trailerRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:scrollbars="vertical">
     </android.support.v7.widget.RecyclerView>
+
+    <View
+        android:layout_below="@id/trailerRecyclerView"
+        android:layout_margin="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"/>
 
     <android.support.v7.widget.RecyclerView
         android:layout_margin="8dp"
