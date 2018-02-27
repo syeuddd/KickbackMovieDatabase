@@ -6,6 +6,9 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -25,12 +28,29 @@ public class Movie_Details_Activity extends AppCompatActivity implements OnTaskC
     ProgressBar mBar;
     TextView movieLengthTextView;
     Button favoriteButton;
+    private TrailerViewAdapter mTrailerViewAdapter;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_details);
+
+        mTrailerViewAdapter = new TrailerViewAdapter(Movie_Details_Activity.this);
+
+        RecyclerView recyclerView = findViewById(R.id.trailerRecyclerView);
+
+        recyclerView.setAdapter(mTrailerViewAdapter);
+
+        LinearLayoutManager manager= new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
+
+        recyclerView.setLayoutManager(manager);
+
+        DividerItemDecoration itemDecoration= new DividerItemDecoration(recyclerView.getContext(),manager.getOrientation());
+
+        recyclerView.addItemDecoration(itemDecoration);
+
+
 
         TextView movieTitle = findViewById(R.id.movieOriginalTitle);
 
@@ -118,7 +138,7 @@ public class Movie_Details_Activity extends AppCompatActivity implements OnTaskC
         }
 
         if(response.getTrailers().size() > 0){
-            movieTrailer = response.getTrailers().get(0);
+            mTrailerViewAdapter.setData(response.getTrailers());
         }
 
         if (response.getReviews().size() > 0){
