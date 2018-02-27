@@ -29,6 +29,7 @@ public class Movie_Details_Activity extends AppCompatActivity implements OnTaskC
     TextView movieLengthTextView;
     Button favoriteButton;
     private TrailerViewAdapter mTrailerViewAdapter;
+    private ReviewViewAdapter mReviewViewAdapter;
 
 
     @Override
@@ -37,20 +38,39 @@ public class Movie_Details_Activity extends AppCompatActivity implements OnTaskC
         setContentView(R.layout.activity_movie_details);
 
         mTrailerViewAdapter = new TrailerViewAdapter(Movie_Details_Activity.this);
+        mReviewViewAdapter = new ReviewViewAdapter(Movie_Details_Activity.this);
 
-        RecyclerView recyclerView = findViewById(R.id.trailerRecyclerView);
+        //trailer recycler view stuff
 
-        recyclerView.setAdapter(mTrailerViewAdapter);
+        RecyclerView trailerRecyclerView = findViewById(R.id.trailerRecyclerView);
 
-        LinearLayoutManager manager= new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
+        trailerRecyclerView.setAdapter(mTrailerViewAdapter);
 
-        recyclerView.setLayoutManager(manager);
+        LinearLayoutManager trailerViewmanager= new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
 
-        DividerItemDecoration itemDecoration= new DividerItemDecoration(recyclerView.getContext(),manager.getOrientation());
+        trailerRecyclerView.setLayoutManager(trailerViewmanager);
 
-        recyclerView.addItemDecoration(itemDecoration);
+        DividerItemDecoration trailerItemDecoration= new DividerItemDecoration(trailerRecyclerView.getContext(),trailerViewmanager.getOrientation());
+
+        trailerRecyclerView.addItemDecoration(trailerItemDecoration);
 
 
+        //review recycler stuff
+
+        RecyclerView reviewRecyclerView  = findViewById(R.id.reviewRecyclerView);
+
+        reviewRecyclerView.setAdapter(mReviewViewAdapter);
+
+        LinearLayoutManager reviewViewmanager= new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
+
+        reviewRecyclerView.setLayoutManager(reviewViewmanager);
+
+        DividerItemDecoration reviewItemDecoration = new DividerItemDecoration(reviewRecyclerView.getContext(),reviewViewmanager.getOrientation());
+
+        reviewRecyclerView.addItemDecoration(reviewItemDecoration);
+
+
+        // other stuff
 
         TextView movieTitle = findViewById(R.id.movieOriginalTitle);
 
@@ -142,7 +162,7 @@ public class Movie_Details_Activity extends AppCompatActivity implements OnTaskC
         }
 
         if (response.getReviews().size() > 0){
-            movieReviews = response.getReviews().get(0);
+            mReviewViewAdapter.setData(response.getReviews());
         }
 
         movieLengthTextView.setText(movieLength+"min");
