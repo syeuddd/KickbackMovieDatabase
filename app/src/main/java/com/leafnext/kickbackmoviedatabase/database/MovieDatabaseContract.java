@@ -8,7 +8,7 @@ import android.provider.BaseColumns;
 
 public class MovieDatabaseContract{
 
-    public static final class MovieInfo implements BaseColumns{
+    public static final class MovieInfoContract implements BaseColumns{
 
         public static final String TABLE_NAME = "movieDetails";
 

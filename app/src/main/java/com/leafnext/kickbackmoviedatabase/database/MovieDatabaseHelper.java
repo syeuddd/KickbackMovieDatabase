@@ -1,11 +1,10 @@
 package com.leafnext.kickbackmoviedatabase.database;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.leafnext.kickbackmoviedatabase.database.MovieDatabaseContract.MovieInfo;
+import com.leafnext.kickbackmoviedatabase.database.MovieDatabaseContract.MovieInfoContract;
 
 /**
  * Created by syedehteshamuddin on 2018-02-22.
@@ -26,26 +25,26 @@ import com.leafnext.kickbackmoviedatabase.database.MovieDatabaseContract.MovieIn
     public void onCreate(SQLiteDatabase db) {
 
         final String SQL_CREATE_MOVIEINFO_TABLE = "CREATE TABLE " +
-                MovieInfo.TABLE_NAME + "( " +
-                MovieInfo._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"+
-                MovieInfo.COLUMN_MOVIE_TITLE + " TEXT, " +
-                MovieInfo.COLUMN_MOVIE_THUMBNAIL + " TEXT, " +
-                MovieInfo.COLUMN_MOVIE_POSTER + " TEXT, " +
-                MovieInfo.COLUMN_MOVIE_RELEASE_DATE + " TEXT, " +
-                MovieInfo.COLUMN_MOVIE_LENGTH + " TEXT, " +
-                MovieInfo.COLUMN_MOVIE_RATING + " TEXT, " +
-                MovieInfo.COLUMN_MOVIE_OVERVIEW + " TEXT, " +
-                MovieInfo.COLUMN_MOVIE_REVIEWS + " TEXT, " +
-                MovieInfo.COLUMN_MOVIE_TRAILER_ONE + " TEXT, " +
-                MovieInfo.COLUMN_MOVIE_TRAILER_TWO + " TEXT, " +
-                MovieInfo.COLUMN_MOVIE_TRAILER_THREE + " TEXT " + ");";
+                MovieInfoContract.TABLE_NAME + "( " +
+                MovieInfoContract._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"+
+                MovieInfoContract.COLUMN_MOVIE_TITLE + " TEXT, " +
+                MovieInfoContract.COLUMN_MOVIE_THUMBNAIL + " TEXT, " +
+                MovieInfoContract.COLUMN_MOVIE_POSTER + " TEXT, " +
+                MovieInfoContract.COLUMN_MOVIE_RELEASE_DATE + " TEXT, " +
+                MovieInfoContract.COLUMN_MOVIE_LENGTH + " TEXT, " +
+                MovieInfoContract.COLUMN_MOVIE_RATING + " TEXT, " +
+                MovieInfoContract.COLUMN_MOVIE_OVERVIEW + " TEXT, " +
+                MovieInfoContract.COLUMN_MOVIE_REVIEWS + " TEXT, " +
+                MovieInfoContract.COLUMN_MOVIE_TRAILER_ONE + " TEXT, " +
+                MovieInfoContract.COLUMN_MOVIE_TRAILER_TWO + " TEXT, " +
+                MovieInfoContract.COLUMN_MOVIE_TRAILER_THREE + " TEXT " + ");";
 
         db.execSQL(SQL_CREATE_MOVIEINFO_TABLE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS" + MovieInfo.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS" + MovieInfoContract.TABLE_NAME);
         onCreate(db);
 
     }

@@ -4,7 +4,9 @@ package com.leafnext.kickbackmoviedatabase;
 import android.content.ContentValues;
 import android.content.Intent;
 
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -18,7 +20,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.leafnext.kickbackmoviedatabase.FetchMovieDetailsAsyncTask.OnTaskCompletedDetail;
 import com.leafnext.kickbackmoviedatabase.Utils.NetworkUtils;
@@ -29,8 +30,6 @@ import com.squareup.picasso.Picasso;
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 
 public class Movie_Details_Activity extends AppCompatActivity implements OnTaskCompletedDetail{
@@ -101,21 +100,16 @@ public class Movie_Details_Activity extends AppCompatActivity implements OnTaskC
 
         TextView movieReleaseDate = findViewById(R.id.movieReleaseDate);
 
-        Button saveToFavourites = findViewById(R.id.favouriteButton);
-
-        saveToFavourites.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-             long id = addMovieToFavouriteDatabase(selectedMovieDetails);
-                Log.i("DetailsActivity", String.valueOf(id + " Id returned"));
-
-            }
-        });
-
         favoriteButton = findViewById(R.id.favouriteButton);
 
         favoriteButton.setText("Mark as"+"\n"+"Favourite");
+
+        favoriteButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
 
 
          movieLengthTextView = findViewById(R.id.movieLength);
@@ -205,10 +199,21 @@ public class Movie_Details_Activity extends AppCompatActivity implements OnTaskC
     private long addMovieToFavouriteDatabase(MovieInfo info){
 
         ContentValues cv = new ContentValues();
-        cv.put(MovieDatabaseContract.MovieInfo.COLUMN_MOVIE_TITLE,info.getOriginalTitle());
-        return favouriteMovieDatabase.insert(MovieDatabaseContract.MovieInfo.TABLE_NAME,null,cv);
+        cv.put(MovieDatabaseContract.MovieInfoContract.COLUMN_MOVIE_TITLE,info.getOriginalTitle());
+        return favouriteMovieDatabase.insert(MovieDatabaseContract.MovieInfoContract.TABLE_NAME,null,cv);
 
+    }
 
+    private boolean ifMoveExistInDatabase(String movieTitle){
+
+        SQLiteQueryBuilder sqLiteQueryBuilder = new SQLiteQueryBuilder();
+        String[] args = {MovieDatabaseContract.MovieInfoContract.COLUMN_MOVIE_TITLE};
+        Cursor cursor = favouriteMovieDatabase.query(MovieDatabaseContract.MovieInfoContract.TABLE_NAME, args,movieTitle,null,null,null,null);
+        if (cursor.getCount()>0){
+            return true;
+        }else {
+            return false;
+        }
 
     }
 }

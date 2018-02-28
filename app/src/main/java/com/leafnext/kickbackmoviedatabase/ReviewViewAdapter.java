@@ -57,8 +57,11 @@ public class ReviewViewAdapter extends RecyclerView.Adapter<ReviewViewAdapter.My
              @Override
              public void onClick(View view) {
                  if (ReviewViewAdapter.this.isTextViewClicked){
-
-
+                    reviewTextView.setMaxLines(2);
+                    ReviewViewAdapter.this.isTextViewClicked = false;
+                 }else {
+                     reviewTextView.setMaxLines(Integer.MAX_VALUE);
+                     ReviewViewAdapter.this.isTextViewClicked = true;
                  }
 
              }
