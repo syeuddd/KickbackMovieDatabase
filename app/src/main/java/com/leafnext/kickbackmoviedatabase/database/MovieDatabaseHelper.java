@@ -28,17 +28,17 @@ import com.leafnext.kickbackmoviedatabase.database.MovieDatabaseContract.MovieIn
         final String SQL_CREATE_MOVIEINFO_TABLE = "CREATE TABLE " +
                 MovieInfo.TABLE_NAME + "( " +
                 MovieInfo._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"+
-                MovieInfo.COLUMN_MOVIE_TITLE + " TEXT NOT NULL, " +
-                MovieInfo.COLUMN_MOVIE_THUMBNAIL + " TEXT NOT NULL, " +
-                MovieInfo.COLUMN_MOVIE_POSTER + " TEXT NOT NULL, " +
-                MovieInfo.COLUMN_MOVIE_RELEASE_DATE + " TEXT NOT NULL, " +
-                MovieInfo.COLUMN_MOVIE_LENGTH + " TEXT NOT NULL, " +
-                MovieInfo.COLUMN_MOVIE_RATING + " TEXT NOT NULL, " +
-                MovieInfo.COLUMN_MOVIE_OVERVIEW + " TEXT NOT NULL, " +
-                MovieInfo.COLUMN_MOVIE_REVIEWS + " TEXT NOT NULL, " +
-                MovieInfo.COLUMN_MOVIE_TRAILER_ONE + " TEXT NOT NULL, " +
-                MovieInfo.COLUMN_MOVIE_TRAILER_TWO + " TEXT NOT NULL, " +
-                MovieInfo.COLUMN_MOVIE_TRAILER_THREE + " TEXT NOT NULL" + ");";
+                MovieInfo.COLUMN_MOVIE_TITLE + " TEXT, " +
+                MovieInfo.COLUMN_MOVIE_THUMBNAIL + " TEXT, " +
+                MovieInfo.COLUMN_MOVIE_POSTER + " TEXT, " +
+                MovieInfo.COLUMN_MOVIE_RELEASE_DATE + " TEXT, " +
+                MovieInfo.COLUMN_MOVIE_LENGTH + " TEXT, " +
+                MovieInfo.COLUMN_MOVIE_RATING + " TEXT, " +
+                MovieInfo.COLUMN_MOVIE_OVERVIEW + " TEXT, " +
+                MovieInfo.COLUMN_MOVIE_REVIEWS + " TEXT, " +
+                MovieInfo.COLUMN_MOVIE_TRAILER_ONE + " TEXT, " +
+                MovieInfo.COLUMN_MOVIE_TRAILER_TWO + " TEXT, " +
+                MovieInfo.COLUMN_MOVIE_TRAILER_THREE + " TEXT " + ");";
 
         db.execSQL(SQL_CREATE_MOVIEINFO_TABLE);
     }

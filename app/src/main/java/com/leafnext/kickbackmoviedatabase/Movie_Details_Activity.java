@@ -1,8 +1,10 @@
 package com.leafnext.kickbackmoviedatabase;
 
 
+import android.content.ContentValues;
 import android.content.Intent;
 
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -10,17 +12,25 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.leafnext.kickbackmoviedatabase.FetchMovieDetailsAsyncTask.OnTaskCompletedDetail;
 import com.leafnext.kickbackmoviedatabase.Utils.NetworkUtils;
+import com.leafnext.kickbackmoviedatabase.database.MovieDatabaseContract;
+import com.leafnext.kickbackmoviedatabase.database.MovieDatabaseHelper;
 import com.leafnext.kickbackmoviedatabase.model.MovieInfo;
 import com.squareup.picasso.Picasso;
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 
 public class Movie_Details_Activity extends AppCompatActivity implements OnTaskCompletedDetail{
@@ -30,12 +40,21 @@ public class Movie_Details_Activity extends AppCompatActivity implements OnTaskC
     Button favoriteButton;
     private TrailerViewAdapter mTrailerViewAdapter;
     private ReviewViewAdapter mReviewViewAdapter;
+    private SQLiteDatabase favouriteMovieDatabase;
+    private  MovieInfo selectedMovieDetails;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_details);
+
+        Intent intent = getIntent();
+
+        selectedMovieDetails = intent.getParcelableExtra("movieDetails");
+
+        MovieDatabaseHelper databaseHelper = new MovieDatabaseHelper(this);
+        favouriteMovieDatabase = databaseHelper.getWritableDatabase();
 
         mTrailerViewAdapter = new TrailerViewAdapter(Movie_Details_Activity.this);
         mReviewViewAdapter = new ReviewViewAdapter(Movie_Details_Activity.this);
@@ -82,6 +101,18 @@ public class Movie_Details_Activity extends AppCompatActivity implements OnTaskC
 
         TextView movieReleaseDate = findViewById(R.id.movieReleaseDate);
 
+        Button saveToFavourites = findViewById(R.id.favouriteButton);
+
+        saveToFavourites.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+             long id = addMovieToFavouriteDatabase(selectedMovieDetails);
+                Log.i("DetailsActivity", String.valueOf(id + " Id returned"));
+
+            }
+        });
+
         favoriteButton = findViewById(R.id.favouriteButton);
 
         favoriteButton.setText("Mark as"+"\n"+"Favourite");
@@ -99,9 +130,9 @@ public class Movie_Details_Activity extends AppCompatActivity implements OnTaskC
 
         String movieId = "";
 
-        Intent intent = getIntent();
 
-        MovieInfo selectedMovieDetails = intent.getParcelableExtra("movieDetails");
+
+
 
         if (selectedMovieDetails != null){
 
@@ -168,6 +199,16 @@ public class Movie_Details_Activity extends AppCompatActivity implements OnTaskC
         movieLengthTextView.setText(movieLength+"min");
 
         Log.i("DetailsActivity",movieLength + "\n" + movieTrailer + "\n"+ movieReviews);
+
+    }
+
+    private long addMovieToFavouriteDatabase(MovieInfo info){
+
+        ContentValues cv = new ContentValues();
+        cv.put(MovieDatabaseContract.MovieInfo.COLUMN_MOVIE_TITLE,info.getOriginalTitle());
+        return favouriteMovieDatabase.insert(MovieDatabaseContract.MovieInfo.TABLE_NAME,null,cv);
+
+
 
     }
 }
