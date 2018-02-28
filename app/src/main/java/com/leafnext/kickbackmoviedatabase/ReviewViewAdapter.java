@@ -1,6 +1,7 @@
 package com.leafnext.kickbackmoviedatabase;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +22,8 @@ public class ReviewViewAdapter extends RecyclerView.Adapter<ReviewViewAdapter.My
 
     private ArrayList<String> mTrailerList;
     private Context mContext;
+    private TextView reviewTextView;
+    boolean isTextViewClicked = false;
 
     ReviewViewAdapter(Context context){
 
@@ -43,26 +46,23 @@ public class ReviewViewAdapter extends RecyclerView.Adapter<ReviewViewAdapter.My
 
     @Override
     public void onBindViewHolder(ReviewViewAdapter.MyViewHolder holder, int position) {
-
+          final boolean isTextViewClicked = false;
          final String trailer = mTrailerList.get(position);
-         holder.trailerView.setText(trailer);
-         holder.itemView.setOnClickListener(new OnClickListener() {
+
+         reviewTextView = holder.trailerView;
+
+         reviewTextView.setText(trailer);
+
+         reviewTextView.setOnClickListener(new OnClickListener() {
              @Override
              public void onClick(View view) {
+                 if (ReviewViewAdapter.this.isTextViewClicked){
 
 
-
+                 }
 
              }
          });
-
-
-
-
-
-
-
-
     }
 
     @Override
