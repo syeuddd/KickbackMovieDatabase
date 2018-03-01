@@ -24,6 +24,7 @@ import android.widget.TextView;
 import com.leafnext.kickbackmoviedatabase.FetchMovieDetailsAsyncTask.OnTaskCompletedDetail;
 import com.leafnext.kickbackmoviedatabase.Utils.NetworkUtils;
 import com.leafnext.kickbackmoviedatabase.database.MovieDatabaseContract;
+import com.leafnext.kickbackmoviedatabase.database.MovieDatabaseContract.MovieInfoContract;
 import com.leafnext.kickbackmoviedatabase.database.MovieDatabaseHelper;
 import com.leafnext.kickbackmoviedatabase.model.MovieInfo;
 import com.squareup.picasso.Picasso;
@@ -108,6 +109,8 @@ public class Movie_Details_Activity extends AppCompatActivity implements OnTaskC
             @Override
             public void onClick(View view) {
 
+                addMovieToFavouriteDatabase(selectedMovieDetails);
+
             }
         });
 
@@ -169,6 +172,9 @@ public class Movie_Details_Activity extends AppCompatActivity implements OnTaskC
 
         new FetchMovieDetailsAsyncTask(this,mBar,selectedMovieDetails).execute(movieLengthUrl,trailersUrl,reviewsUrl);
 
+        Boolean movieExist = ifMoveExistInDatabase(selectedMovieDetails.getOriginalTitle());
+
+
     }
 
     @Override
@@ -205,15 +211,21 @@ public class Movie_Details_Activity extends AppCompatActivity implements OnTaskC
     }
 
     private boolean ifMoveExistInDatabase(String movieTitle){
-
-        SQLiteQueryBuilder sqLiteQueryBuilder = new SQLiteQueryBuilder();
+        boolean movieAdded = false;
         String[] args = {MovieDatabaseContract.MovieInfoContract.COLUMN_MOVIE_TITLE};
-        Cursor cursor = favouriteMovieDatabase.query(MovieDatabaseContract.MovieInfoContract.TABLE_NAME, args,movieTitle,null,null,null,null);
-        if (cursor.getCount()>0){
-            return true;
-        }else {
-            return false;
+        Cursor cursor = favouriteMovieDatabase.query(MovieDatabaseContract.MovieInfoContract.TABLE_NAME, args,null,null,null,null,null);
+        if (cursor.moveToFirst()){
+            do {
+                int index = cursor.getColumnIndex(MovieInfoContract.COLUMN_MOVIE_TITLE);
+                String title = cursor.getString(index);
+                if (movieTitle.equals(title)){
+                    movieAdded = true;
+                    break;
+                }
+            }while (cursor.moveToNext());
+
         }
 
+        return movieAdded;
     }
 }
