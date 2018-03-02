@@ -27,6 +27,12 @@
                 android:value=".MainActivity"/>
 
         </activity>
+
+        <provider
+            android:authorities="com.leafnext.kickbackmoviedatabase"
+            android:name=".database.MovieDatabaseContentProvider"
+            android:exported="false"/>
+
     </application>
 
 </manifest>
