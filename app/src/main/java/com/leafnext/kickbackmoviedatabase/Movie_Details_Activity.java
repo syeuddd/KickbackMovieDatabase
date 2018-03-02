@@ -6,10 +6,9 @@ import android.content.Intent;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteQueryBuilder;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -107,7 +106,7 @@ public class Movie_Details_Activity extends AppCompatActivity implements OnTaskC
 
 
 
-        currentMovieId = ifMoveExistInDatabase(selectedMovieDetails.getOriginalTitle());
+        currentMovieId = ifMoveExistInFaouriteDatabase(selectedMovieDetails.getOriginalTitle());
         if (currentMovieId<0){
             movieExist = false;
         }else {
@@ -120,7 +119,7 @@ public class Movie_Details_Activity extends AppCompatActivity implements OnTaskC
             favoriteButton.setText("Mark as"+"\n"+"Favourite");
         }else {
             favoriteButton.setText("Remove from"+"\n"+"Favourites");
-            favoriteButton.setBackgroundColor(Color.RED);
+            favoriteButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(),R.color.buttonBackgroundColorDeleteFavourite));
         }
 
 
@@ -132,14 +131,14 @@ public class Movie_Details_Activity extends AppCompatActivity implements OnTaskC
 
                     removeMovieFromFavouriteDatabase(Movie_Details_Activity.this.currentMovieId);
                     favoriteButton.setText("Mark as"+"\n"+"Favourite");
-                    favoriteButton.setBackgroundColor(Color.BLUE);
+                    favoriteButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(),R.color.buttonBackgroundColor));
                     Movie_Details_Activity.this.movieExist = false;
 
                 }else {
 
                     addMovieToFavouriteDatabase(selectedMovieDetails);
                     favoriteButton.setText("Remove from"+"\n"+"Favourites");
-                    favoriteButton.setBackgroundColor(Color.RED);
+                    favoriteButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(),R.color.buttonBackgroundColorDeleteFavourite));
                     Movie_Details_Activity.this.movieExist = true;
                 }
             }
@@ -242,8 +241,8 @@ public class Movie_Details_Activity extends AppCompatActivity implements OnTaskC
 
     }
 
-    private long ifMoveExistInDatabase(String movieTitle){
-        boolean movieAdded = false;
+    private long ifMoveExistInFaouriteDatabase(String movieTitle){
+
         String[] args = {MovieInfoContract._ID,MovieDatabaseContract.MovieInfoContract.COLUMN_MOVIE_TITLE};
         Cursor cursor = favouriteMovieDatabase.query(MovieDatabaseContract.MovieInfoContract.TABLE_NAME, args,null,null,null,null,null);
         if (cursor.moveToFirst()){
@@ -270,8 +269,10 @@ public class Movie_Details_Activity extends AppCompatActivity implements OnTaskC
 
          int rowsDeleted = favouriteMovieDatabase.delete(MovieInfoContract.TABLE_NAME,MovieInfoContract._ID+"="+currentMovieId,null);
 
-        // need to implement delete method
-        Toast.makeText(this,"Movie removed from favourites",Toast.LENGTH_SHORT).show();
+        if (rowsDeleted>0){
+            Toast.makeText(this,"Movie removed from favourites",Toast.LENGTH_SHORT).show();
+        }
+
     }
 
 }

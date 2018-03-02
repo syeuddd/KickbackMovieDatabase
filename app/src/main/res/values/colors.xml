@@ -6,4 +6,5 @@
     <color name="movieTitleBackGroundColor">#349987</color>
     <color name="movieTitleTextColor">#ffffff</color>
     <color name="buttonBackgroundColor">#95E7DA</color>
+    <color name="buttonBackgroundColorDeleteFavourite">#F68383</color>
 </resources>
