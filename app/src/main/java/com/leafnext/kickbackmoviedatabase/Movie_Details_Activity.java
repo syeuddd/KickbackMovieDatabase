@@ -1,9 +1,9 @@
 package com.leafnext.kickbackmoviedatabase;
 
 
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Intent;
-
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
@@ -14,14 +14,15 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.leafnext.kickbackmoviedatabase.FetchMovieDetailsAsyncTask.OnTaskCompletedDetail;
 import com.leafnext.kickbackmoviedatabase.Utils.NetworkUtils;
 import com.leafnext.kickbackmoviedatabase.database.MovieDatabaseContract;
@@ -44,7 +45,14 @@ public class Movie_Details_Activity extends AppCompatActivity implements OnTaskC
     private SQLiteDatabase favouriteMovieDatabase;
     private  MovieInfo selectedMovieDetails;
     private Boolean movieExist = false;
-    private long currentMovieId = -1;
+    private String currentMovieId = "";
+    private boolean dataCameFromDatabase = false;
+    public final String CURRENT_MOVIE_KEY = "currentMovieObject";
+    RelativeLayout parentLayout;
+    RecyclerView reviewRecyclerView;
+    RecyclerView trailerRecyclerView;
+    View trailerDivider;
+    View reviewViewDivider;
 
 
     @Override
@@ -54,7 +62,11 @@ public class Movie_Details_Activity extends AppCompatActivity implements OnTaskC
 
         Intent intent = getIntent();
 
-        selectedMovieDetails = intent.getParcelableExtra("movieDetails");
+        if (savedInstanceState!= null){
+            selectedMovieDetails = savedInstanceState.getParcelable(CURRENT_MOVIE_KEY);
+        }else {
+            selectedMovieDetails = intent.getParcelableExtra("movieDetails");
+        }
 
         MovieDatabaseHelper databaseHelper = new MovieDatabaseHelper(this);
         favouriteMovieDatabase = databaseHelper.getWritableDatabase();
@@ -64,7 +76,7 @@ public class Movie_Details_Activity extends AppCompatActivity implements OnTaskC
 
         //trailer recycler view stuff
 
-        RecyclerView trailerRecyclerView = findViewById(R.id.trailerRecyclerView);
+        trailerRecyclerView = findViewById(R.id.trailerRecyclerView);
 
         trailerRecyclerView.setAdapter(mTrailerViewAdapter);
 
@@ -79,7 +91,7 @@ public class Movie_Details_Activity extends AppCompatActivity implements OnTaskC
 
         //review recycler stuff
 
-        RecyclerView reviewRecyclerView  = findViewById(R.id.reviewRecyclerView);
+        reviewRecyclerView  = findViewById(R.id.reviewRecyclerView);
 
         reviewRecyclerView.setAdapter(mReviewViewAdapter);
 
@@ -104,19 +116,28 @@ public class Movie_Details_Activity extends AppCompatActivity implements OnTaskC
 
         TextView movieReleaseDate = findViewById(R.id.movieReleaseDate);
 
-
-
-        currentMovieId = ifMoveExistInFaouriteDatabase(selectedMovieDetails.getOriginalTitle());
-        if (currentMovieId<0){
-            movieExist = false;
-        }else {
-            movieExist =true;
-        }
-
         favoriteButton = findViewById(R.id.favouriteButton);
 
-        if (!movieExist){
+        // layout changes if movies are loaded from database
+
+        parentLayout = findViewById(R.id.detailsActivityParentRelativeLayout);
+
+        trailerDivider = findViewById(R.id.trailerViewDivider);
+        reviewViewDivider = findViewById(R.id.reviewViewDivider);
+
+        if (dataCameFromDatabase){
+
+            parentLayout.removeView(trailerDivider);
+            parentLayout.removeView(reviewViewDivider);
+
+        }
+
+
+        currentMovieId = ifMoveExistInFaouriteDatabase(selectedMovieDetails.getMovieId());
+
+        if (currentMovieId.isEmpty()){
             favoriteButton.setText("Mark as"+"\n"+"Favourite");
+            favoriteButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(),R.color.buttonBackgroundColor));
         }else {
             favoriteButton.setText("Remove from"+"\n"+"Favourites");
             favoriteButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(),R.color.buttonBackgroundColorDeleteFavourite));
@@ -127,25 +148,32 @@ public class Movie_Details_Activity extends AppCompatActivity implements OnTaskC
         favoriteButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (Movie_Details_Activity.this.movieExist){
+                if (!Movie_Details_Activity.this.currentMovieId.isEmpty()){
 
-                    removeMovieFromFavouriteDatabase(Movie_Details_Activity.this.currentMovieId);
-                    favoriteButton.setText("Mark as"+"\n"+"Favourite");
-                    favoriteButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(),R.color.buttonBackgroundColor));
-                    Movie_Details_Activity.this.movieExist = false;
+                  int rowsDeleted = removeMovieFromFavouriteDatabase(Movie_Details_Activity.this.currentMovieId);
+
+                    if (rowsDeleted>0){
+                        favoriteButton.setText("Mark as"+"\n"+"Favourite");
+                        favoriteButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(),R.color.buttonBackgroundColor));
+                        Movie_Details_Activity.this.currentMovieId = "";
+                    }
 
                 }else {
 
-                    addMovieToFavouriteDatabase(selectedMovieDetails);
-                    favoriteButton.setText("Remove from"+"\n"+"Favourites");
-                    favoriteButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(),R.color.buttonBackgroundColorDeleteFavourite));
-                    Movie_Details_Activity.this.movieExist = true;
+                    String newMovieDatabaseId = addMovieToFavouriteDatabase(selectedMovieDetails);
+                    if (!newMovieDatabaseId.isEmpty()) {
+                        favoriteButton.setText("Remove from"+"\n"+"Favourites");
+                        favoriteButton.setBackgroundColor(ContextCompat.getColor(getApplicationContext(),R.color.buttonBackgroundColorDeleteFavourite));
+                        Movie_Details_Activity.this.currentMovieId = newMovieDatabaseId;
+                        Log.i("Details_Activity","Still stuck in removed from favorites block");
+                    }
+
                 }
             }
         });
 
 
-         movieLengthTextView = findViewById(R.id.movieLength);
+        movieLengthTextView = findViewById(R.id.movieLength);
 
         movieLengthTextView.setText("Loading");
 
@@ -158,12 +186,11 @@ public class Movie_Details_Activity extends AppCompatActivity implements OnTaskC
         String movieId = "";
 
 
-
-
-
         if (selectedMovieDetails != null){
 
-            movieId = selectedMovieDetails.getMovieId();
+            if (selectedMovieDetails.getMovieId()!=null){
+                movieId = selectedMovieDetails.getMovieId();
+            }
 
             movieTitle.setText(selectedMovieDetails.getOriginalTitle());
 
@@ -196,14 +223,15 @@ public class Movie_Details_Activity extends AppCompatActivity implements OnTaskC
 
         }
 
-        URL movieLengthUrl = NetworkUtils.getMoreMovieDetails(movieId,null);
-        URL trailersUrl = NetworkUtils.getMoreMovieDetails(movieId,NetworkUtils.MOVIE_TRAILERS);
-        URL reviewsUrl  = NetworkUtils.getMoreMovieDetails(movieId,NetworkUtils.MOVIE_REVIEWS);
 
-        new FetchMovieDetailsAsyncTask(this,mBar,selectedMovieDetails).execute(movieLengthUrl,trailersUrl,reviewsUrl);
+        if (!movieId.isEmpty()) {
 
+            URL movieLengthUrl = NetworkUtils.getMoreMovieDetails(movieId, null);
+            URL trailersUrl = NetworkUtils.getMoreMovieDetails(movieId, NetworkUtils.MOVIE_TRAILERS);
+            URL reviewsUrl = NetworkUtils.getMoreMovieDetails(movieId, NetworkUtils.MOVIE_REVIEWS);
 
-
+            new FetchMovieDetailsAsyncTask(this, mBar, selectedMovieDetails).execute(movieLengthUrl, trailersUrl, reviewsUrl);
+        }
 
     }
 
@@ -221,10 +249,14 @@ public class Movie_Details_Activity extends AppCompatActivity implements OnTaskC
 
         if(response.getTrailers().size() > 0){
             mTrailerViewAdapter.setData(response.getTrailers());
+        }else {
+            parentLayout.removeView(trailerDivider);
         }
 
         if (response.getReviews().size() > 0){
             mReviewViewAdapter.setData(response.getReviews());
+        }else {
+            parentLayout.removeView(reviewViewDivider);
         }
 
         movieLengthTextView.setText(movieLength+"min");
@@ -233,46 +265,92 @@ public class Movie_Details_Activity extends AppCompatActivity implements OnTaskC
 
     }
 
-    private long addMovieToFavouriteDatabase(MovieInfo info){
+    private String addMovieToFavouriteDatabase(MovieInfo info){
 
         ContentValues cv = new ContentValues();
-        cv.put(MovieDatabaseContract.MovieInfoContract.COLUMN_MOVIE_TITLE,info.getOriginalTitle());
-        return  favouriteMovieDatabase.insert(MovieDatabaseContract.MovieInfoContract.TABLE_NAME,null,cv);
 
+            cv.put(MovieDatabaseContract.MovieInfoContract.COLUMN_MOVIE_TITLE,info.getOriginalTitle());
+            cv.put(MovieInfoContract.COLUMN_MOVIE_ID, info.getMovieId());
+            cv.put(MovieInfoContract.COLUMN_MOVIE_THUMBNAIL,info.getThumbnailImage());
+            cv.put(MovieInfoContract.COLUMN_MOVIE_POSTER,info.getPosterImage());
+            cv.put(MovieInfoContract.COLUMN_MOVIE_OVERVIEW, info.getOverview());
+            cv.put(MovieInfoContract.COLUMN_MOVIE_RATING,info.getVoteAverage());
+            cv.put(MovieInfoContract.COLUMN_MOVIE_RELEASE_DATE,info.getReleaseDate());
+
+            Uri uri = getContentResolver().insert(MovieInfoContract.CONTENT_URI,cv);
+
+           if (uri != null){
+
+               String movieId = info.getMovieId();
+               return movieId;
+           }
+
+        return "";
     }
 
-    private long ifMoveExistInFaouriteDatabase(String movieTitle){
+    private String ifMoveExistInFaouriteDatabase(String movieId){
 
-        String[] args = {MovieInfoContract._ID,MovieDatabaseContract.MovieInfoContract.COLUMN_MOVIE_TITLE};
-        Cursor cursor = favouriteMovieDatabase.query(MovieDatabaseContract.MovieInfoContract.TABLE_NAME, args,null,null,null,null,null);
+        String[] args = {MovieInfoContract.COLUMN_MOVIE_ID};
+
+        Cursor cursor = getContentResolver().query(MovieInfoContract.CONTENT_URI,args,null,null,null,null);
+
+
+         //= favouriteMovieDatabase.query(MovieDatabaseContract.MovieInfoContract.TABLE_NAME, args,null,null,null,null,null);
+
         if (cursor.moveToFirst()){
             do {
-                int movieTitleindex = cursor.getColumnIndex(MovieInfoContract.COLUMN_MOVIE_TITLE);
-                int idIndex = cursor.getColumnIndex(MovieInfoContract._ID);
+                int movieIdIndex = cursor.getColumnIndex(MovieInfoContract.COLUMN_MOVIE_ID);
 
-                String title = cursor.getString(movieTitleindex);
-                long currentMovieId = cursor.getLong(idIndex);
-                if (movieTitle.equals(title)){
+                String mMovieId = cursor.getString(movieIdIndex);
+
+                if (movieId.equals(mMovieId)){
                     cursor.close();
-                    return currentMovieId;
+                    return mMovieId;
                 }
             }while (cursor.moveToNext());
 
         }
             cursor.close();
-        return -10;
+            return "";
     }
 
-    private void removeMovieFromFavouriteDatabase(long currentMovieId) {
+    private int removeMovieFromFavouriteDatabase(String currentMovieId) {
 
-        String[] args = {MovieInfoContract._ID};
+        String[] args = {MovieInfoContract.COLUMN_MOVIE_ID};
 
-         int rowsDeleted = favouriteMovieDatabase.delete(MovieInfoContract.TABLE_NAME,MovieInfoContract._ID+"="+currentMovieId,null);
+        String where = MovieInfoContract.COLUMN_MOVIE_ID+"="+currentMovieId;
 
-        if (rowsDeleted>0){
-            Toast.makeText(this,"Movie removed from favourites",Toast.LENGTH_SHORT).show();
+
+        Uri deleteUri = Uri.withAppendedPath(MovieInfoContract.CONTENT_URI,currentMovieId);
+
+        int rowsDeleted = getContentResolver().delete(deleteUri,where,null);
+
+          //favouriteMovieDatabase.delete(MovieInfoContract.TABLE_NAME,MovieInfoContract._ID+"="+currentMovieId,null);
+
+//        if (rowsDeleted>0){
+//            Toast.makeText(this,"Movie removed from favourites",Toast.LENGTH_SHORT).show();
+//        }
+
+        return rowsDeleted;
+
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        if (selectedMovieDetails!= null){
+            outState.putParcelable(CURRENT_MOVIE_KEY,selectedMovieDetails);
         }
 
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if(item.getItemId()== android.R.id.home){
+            finish();
+        }
+        return true;
+    }
 }

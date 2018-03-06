@@ -30,7 +30,6 @@
         android:layout_below="@id/playIconStatic"
         android:textSize="16dp"
         android:layout_marginLeft="32dp"
-        android:padding="8dp"
-        />
+        android:padding="8dp"/>
 
 </RelativeLayout>

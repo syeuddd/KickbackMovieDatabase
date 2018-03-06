@@ -7,8 +7,13 @@
           app:showAsAction="never"/>
 
 
-    <item   android:id="@+id/topMovies"
-            android:title="@string/top_rated_movies"
-            app:showAsAction="never"/>
+    <item  android:id="@+id/topMovies"
+           android:title="@string/top_rated_movies"
+           app:showAsAction="never"/>
+
+    <item
+           android:id="@+id/favouriteCollection"
+           android:title="Favourite Collection"
+           app:showAsAction="never"/>
 
 </menu>

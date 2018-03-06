@@ -9,12 +9,13 @@
 
 <RelativeLayout
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    android:id="@+id/detailsActivityParentRelativeLayout">
     
 <RelativeLayout
     android:id="@+id/titleLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:layout_alignParentTop="true"
     android:layout_alignParentLeft="true"
     android:layout_alignParentRight="true">
@@ -149,6 +150,7 @@
     </android.support.v7.widget.RecyclerView>
 
     <View
+        android:id="@+id/reviewViewDivider"
         android:layout_below="@id/trailerRecyclerView"
         android:layout_margin="8dp"
         android:layout_width="match_parent"

@@ -25,10 +25,9 @@
 
     <TextView
         android:id="@+id/trailerTitle"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/trailertitleStatic"
-        android:singleLine="false"
         android:text="Review"
         android:textSize="16dp"
         android:padding="8dp"

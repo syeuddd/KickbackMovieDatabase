@@ -28,16 +28,12 @@ import com.leafnext.kickbackmoviedatabase.database.MovieDatabaseContract.MovieIn
                 MovieInfoContract.TABLE_NAME + "( " +
                 MovieInfoContract._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"+
                 MovieInfoContract.COLUMN_MOVIE_TITLE + " TEXT, " +
+                MovieInfoContract.COLUMN_MOVIE_ID + " TEXT, " +
                 MovieInfoContract.COLUMN_MOVIE_THUMBNAIL + " TEXT, " +
                 MovieInfoContract.COLUMN_MOVIE_POSTER + " TEXT, " +
                 MovieInfoContract.COLUMN_MOVIE_RELEASE_DATE + " TEXT, " +
-                MovieInfoContract.COLUMN_MOVIE_LENGTH + " TEXT, " +
                 MovieInfoContract.COLUMN_MOVIE_RATING + " TEXT, " +
-                MovieInfoContract.COLUMN_MOVIE_OVERVIEW + " TEXT, " +
-                MovieInfoContract.COLUMN_MOVIE_REVIEWS + " TEXT, " +
-                MovieInfoContract.COLUMN_MOVIE_TRAILER_ONE + " TEXT, " +
-                MovieInfoContract.COLUMN_MOVIE_TRAILER_TWO + " TEXT, " +
-                MovieInfoContract.COLUMN_MOVIE_TRAILER_THREE + " TEXT " + ");";
+                MovieInfoContract.COLUMN_MOVIE_OVERVIEW + " TEXT " + ");";
 
         db.execSQL(SQL_CREATE_MOVIEINFO_TABLE);
     }

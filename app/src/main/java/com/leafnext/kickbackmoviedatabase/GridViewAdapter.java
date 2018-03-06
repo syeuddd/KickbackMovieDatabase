@@ -72,6 +72,11 @@ import java.util.ArrayList;
                 Intent movieDetailsIntent = new Intent(mContext,Movie_Details_Activity.class);
 
                 movieDetailsIntent.putExtra("movieDetails",selectedMovie);
+                if (selectedMovie.getMovieId()==null){
+                    movieDetailsIntent.putExtra("dataFromDatabase",true);
+                }
+
+
 
                 mContext.startActivity(movieDetailsIntent);
 

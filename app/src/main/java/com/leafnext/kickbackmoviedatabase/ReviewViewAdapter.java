@@ -2,11 +2,16 @@ package com.leafnext.kickbackmoviedatabase;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.widget.TextViewCompat;
 import android.support.v7.widget.RecyclerView;
+import android.text.Layout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,29 +44,39 @@ public class ReviewViewAdapter extends RecyclerView.Adapter<ReviewViewAdapter.My
     @Override
     public ReviewViewAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        View rootView = LayoutInflater.from(mContext).inflate(R.layout.review_item_view,parent,false);
-
+        View rootView = LayoutInflater.from(mContext).inflate(R.layout.review_item_view_linear_layout,parent,false);
         return new MyViewHolder(rootView);
     }
 
     @Override
-    public void onBindViewHolder(ReviewViewAdapter.MyViewHolder holder, int position) {
-          final boolean isTextViewClicked = false;
+    public void onBindViewHolder(final ReviewViewAdapter.MyViewHolder holder, int position) {
+         final boolean isTextViewClicked = false;
+
          final String trailer = mTrailerList.get(position);
 
-         reviewTextView = holder.trailerView;
+         //reviewTextView = holder.trailerView;
 
-         reviewTextView.setText(trailer);
+         holder.trailerView.setText(trailer);
 
-         reviewTextView.setOnClickListener(new OnClickListener() {
+        Log.i("ReviewViewAdapter",trailer.length()+"");
+
+         holder.trailerView.setOnClickListener(new OnClickListener() {
              @Override
              public void onClick(View view) {
+
+                Log.i("DetailsActivity",trailer);
                  if (ReviewViewAdapter.this.isTextViewClicked){
-                    reviewTextView.setMaxLines(2);
-                    ReviewViewAdapter.this.isTextViewClicked = false;
+                            holder.trailerView.setMaxLines(2);
+                            ReviewViewAdapter.this.isTextViewClicked = false;
                  }else {
-                     reviewTextView.setMaxLines(Integer.MAX_VALUE);
-                     ReviewViewAdapter.this.isTextViewClicked = true;
+
+//                            int trailerLength = trailer.length();
+//                            LinearLayout.LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT,trailerLength);
+//
+//                            ReviewViewAdapter.this.reviewTextView.setLayoutParams(params);
+                            holder.trailerView.setMaxLines(Integer.MAX_VALUE);
+                            ReviewViewAdapter.this.isTextViewClicked = true;
+
                  }
 
              }
@@ -87,5 +102,20 @@ public class ReviewViewAdapter extends RecyclerView.Adapter<ReviewViewAdapter.My
 
            trailerView = itemView.findViewById(R.id.trailerTitle);
         }
+    }
+
+    private boolean isTextEllipsied(){
+
+        Layout layout = reviewTextView.getLayout();
+        if (layout != null){
+            int lines = layout.getLineCount();
+            if (lines>0){
+                if ((layout.getEllipsisCount(lines-1)>0)){
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }
