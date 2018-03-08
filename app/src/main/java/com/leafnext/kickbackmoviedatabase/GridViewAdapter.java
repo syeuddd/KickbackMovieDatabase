@@ -75,9 +75,6 @@ import java.util.ArrayList;
                 if (selectedMovie.getMovieId()==null){
                     movieDetailsIntent.putExtra("dataFromDatabase",true);
                 }
-
-
-
                 mContext.startActivity(movieDetailsIntent);
 
             }

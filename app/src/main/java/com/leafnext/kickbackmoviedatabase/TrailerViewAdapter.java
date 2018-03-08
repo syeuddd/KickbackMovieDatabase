@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -54,6 +55,12 @@ public class TrailerViewAdapter extends RecyclerView.Adapter<TrailerViewAdapter.
                  watchVideoYoutube(mContext,trailerid);
              }
          });
+         holder.ellipsisView.setOnClickListener(new OnClickListener() {
+             @Override
+             public void onClick(View view) {
+                 Toast.makeText(mContext,"share button is clicked",Toast.LENGTH_SHORT).show();
+             }
+         });
 
     }
 
@@ -71,10 +78,12 @@ public class TrailerViewAdapter extends RecyclerView.Adapter<TrailerViewAdapter.
     class MyViewHolder extends RecyclerView.ViewHolder{
 
         TextView trailerView;
+        ImageView ellipsisView;
         public MyViewHolder(View itemView) {
             super(itemView);
 
            trailerView = itemView.findViewById(R.id.trailerTitle);
+           ellipsisView = itemView.findViewById(R.id.ellipsis);
         }
     }
 

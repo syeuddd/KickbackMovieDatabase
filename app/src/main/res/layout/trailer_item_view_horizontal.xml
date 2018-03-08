@@ -31,5 +31,13 @@
         android:textSize="16dp"
         android:layout_marginLeft="32dp"
         android:padding="8dp"/>
+    <ImageView
+        android:id="@+id/ellipsis"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/playIconStatic"
+        android:layout_toRightOf="@id/trailerTitle"
+        android:src="@drawable/ic_more_vert_black_24dp"
+        android:padding="8dp" />
 
 </RelativeLayout>

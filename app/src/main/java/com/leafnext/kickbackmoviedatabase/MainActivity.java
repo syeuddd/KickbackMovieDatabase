@@ -2,37 +2,27 @@ package com.leafnext.kickbackmoviedatabase;
 
 import android.content.Context;
 import android.content.res.Configuration;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.AsyncTask;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.facebook.stetho.Stetho;
 import com.leafnext.kickbackmoviedatabase.FetchMovieAsyncTask.OnTaskCompleted;
 import com.leafnext.kickbackmoviedatabase.Utils.NetworkUtils;
-import com.leafnext.kickbackmoviedatabase.database.MovieDatabaseContract;
-import com.leafnext.kickbackmoviedatabase.database.MovieDatabaseContract.MovieInfoContract;
 import com.leafnext.kickbackmoviedatabase.database.MovieDatabaseHelper;
 import com.leafnext.kickbackmoviedatabase.model.MovieInfo;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 
@@ -43,8 +33,10 @@ public class MainActivity extends AppCompatActivity implements OnTaskCompleted,L
     private ProgressBar bar;
     private GridViewAdapter gridViewAdapter;
     private SQLiteDatabase mDb;
-    private ArrayList<MovieInfo> movieList;
+    private ArrayList<MovieInfo> movieListFromApi;
+    private ArrayList<MovieInfo> movieListFromDatabase;
     private final String MOVIE_LIST_KEY = "movieListKey";
+    private boolean currentViewisDatabase = false;
 
 
 
@@ -67,6 +59,8 @@ public class MainActivity extends AppCompatActivity implements OnTaskCompleted,L
 
         bar =  findViewById(R.id.progressBar);
 
+        movieListFromDatabase = new ArrayList<>();
+
 
         // show 3 columns in landscape
 
@@ -84,28 +78,46 @@ public class MainActivity extends AppCompatActivity implements OnTaskCompleted,L
 
         //recyclerView.setLayoutManager(new StaggeredGridLayoutManager(5, StaggeredGridLayoutManager.VERTICAL));
 
-        if (savedInstanceState !=null){
 
-            movieList = savedInstanceState.getParcelableArrayList(MOVIE_LIST_KEY);
-            gridViewAdapter.setData(movieList);
 
+
+        if(savedInstanceState != null) {
+
+            currentViewisDatabase = savedInstanceState.getBoolean("database");
+
+            if (!currentViewisDatabase){
+
+                movieListFromApi = savedInstanceState.getParcelableArrayList(MOVIE_LIST_KEY);
+                gridViewAdapter.setData(movieListFromApi);
+
+            }
         }else {
             fetchMovies(NetworkUtils.TOP_RATED_MOVIES);
         }
 
-
-
         Stetho.initializeWithDefaults(this);
-
-
-
 
     }
 
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+    }
 
     @Override
     protected void onStart() {
         super.onStart();
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (currentViewisDatabase) {
+
+            getSupportLoaderManager().initLoader(0, null, this);
+
+        }
         gridViewAdapter.notifyDataSetChanged();
     }
 
@@ -135,16 +147,19 @@ public class MainActivity extends AppCompatActivity implements OnTaskCompleted,L
             case R.id.popularMovies:
                 gridViewAdapter.setData(null);
                 fetchMovies(NetworkUtils.POPULAR_MOVIES);
+                currentViewisDatabase =false;
                 return true;
 
             case R.id.topMovies:
                 gridViewAdapter.setData(null);
                 fetchMovies(NetworkUtils.TOP_RATED_MOVIES);
+                currentViewisDatabase = false;
                 return true;
 
             case R.id.favouriteCollection:
                 gridViewAdapter.setData(null);
                 getSupportLoaderManager().initLoader(0,null,this);
+                currentViewisDatabase = true;
                 return true;
 
         }
@@ -163,7 +178,7 @@ public class MainActivity extends AppCompatActivity implements OnTaskCompleted,L
     @Override
     public void onTaskCompleted(ArrayList<MovieInfo> response) {
 
-        movieList = response;
+        movieListFromApi = response;
         gridViewAdapter.setData(response);
 
     }
@@ -176,7 +191,7 @@ public class MainActivity extends AppCompatActivity implements OnTaskCompleted,L
     @Override
     public void onLoadFinished(Loader<ArrayList<MovieInfo>> loader, ArrayList<MovieInfo> data) {
 
-        movieList = data;
+        movieListFromDatabase = data;
         gridViewAdapter.setData(data);
 
     }
@@ -189,11 +204,16 @@ public class MainActivity extends AppCompatActivity implements OnTaskCompleted,L
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        if (movieList != null){
-            outState.putParcelableArrayList(MOVIE_LIST_KEY,movieList);
+
+        outState.putBoolean("database",currentViewisDatabase);
+
+        if (movieListFromApi != null){
+            outState.putParcelableArrayList(MOVIE_LIST_KEY, movieListFromApi);
         }
 
     }
+
+
 
     //    private ArrayList<MovieInfo> fetchFavouritesMoviesFromDatabase(){
 //
