@@ -206,15 +206,25 @@ public class Movie_Details_Activity extends AppCompatActivity implements OnTaskC
             }
 
 
-            String baseUrl = "http://image.tmdb.org/t/p/w780";
+         String currentMoviePoster = selectedMovieDetails.getPosterImage();
 
-            Uri baseUri = Uri.parse(baseUrl);
+            if (!currentMoviePoster.equals("null")){
 
-            Uri uri = Uri.withAppendedPath(baseUri,selectedMovieDetails.getPosterImage());
+                String baseUrl = "http://image.tmdb.org/t/p/w780";
 
-            Picasso.with(this)
-                    .load(uri)
-                    .into(moviePoster);
+                Uri baseUri = Uri.parse(baseUrl);
+
+                Uri uri = Uri.withAppendedPath(baseUri,selectedMovieDetails.getPosterImage());
+
+                Picasso.with(this)
+                        .load(uri)
+                        .into(moviePoster);
+            }else {
+                Picasso.with(this)
+                        .load(R.drawable.ic_broken_image_black_24dp)
+                        .into(moviePoster);
+            }
+
 
             movieRating.setText(selectedMovieDetails.getVoteAverage() + "/10");
 
@@ -224,7 +234,7 @@ public class Movie_Details_Activity extends AppCompatActivity implements OnTaskC
         }
 
 
-        if (!movieId.isEmpty()) {
+        if ((!movieId.isEmpty()) && (!movieId.equals("null"))) {
 
             URL movieLengthUrl = NetworkUtils.getMoreMovieDetails(movieId, null);
             URL trailersUrl = NetworkUtils.getMoreMovieDetails(movieId, NetworkUtils.MOVIE_TRAILERS);

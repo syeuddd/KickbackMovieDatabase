@@ -53,32 +53,45 @@ import java.util.ArrayList;
 
         final MovieInfo selectedMovie = mMovieInfoArrayList.get(position);
 
+
+
         String imageUrl = selectedMovie.getThumbnailImage();
 
-        String baseUrl = "http://image.tmdb.org/t/p/w500";
+        if (imageUrl.equals("null")){
 
-        Uri baseUri = Uri.parse(baseUrl);
+            Picasso.with(mContext)
+                    .load(R.drawable.ic_broken_image_black_24dp)
+                    .into(holder.mImageView);
+        }else
+            {
 
-        Uri uri = Uri.withAppendedPath(baseUri,imageUrl);
+            String baseUrl = "http://image.tmdb.org/t/p/w500";
 
-        Picasso.with(mContext)
-                .load(uri)
-                .into(holder.mImageView);
+            Uri baseUri = Uri.parse(baseUrl);
 
-        holder.itemView.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            Uri uri = Uri.withAppendedPath(baseUri,imageUrl);
 
-                Intent movieDetailsIntent = new Intent(mContext,Movie_Details_Activity.class);
 
-                movieDetailsIntent.putExtra("movieDetails",selectedMovie);
-                if (selectedMovie.getMovieId()==null){
-                    movieDetailsIntent.putExtra("dataFromDatabase",true);
+            Picasso.with(mContext)
+                    .load(uri)
+                    .into(holder.mImageView);
+
+            holder.itemView.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    Intent movieDetailsIntent = new Intent(mContext,Movie_Details_Activity.class);
+
+                    movieDetailsIntent.putExtra("movieDetails",selectedMovie);
+                    if (selectedMovie.getMovieId()==null){
+                        movieDetailsIntent.putExtra("dataFromDatabase",true);
+                    }
+                    mContext.startActivity(movieDetailsIntent);
+
+
                 }
-                mContext.startActivity(movieDetailsIntent);
-
-            }
-        });
+            });
+        }
 
 
     }

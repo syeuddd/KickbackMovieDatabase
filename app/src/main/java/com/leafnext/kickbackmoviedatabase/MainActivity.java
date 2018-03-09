@@ -99,10 +99,7 @@ public class MainActivity extends AppCompatActivity implements OnTaskCompleted,L
 
     }
 
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-    }
+
 
     @Override
     protected void onStart() {
@@ -132,6 +129,7 @@ public class MainActivity extends AppCompatActivity implements OnTaskCompleted,L
         }
 
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
