@@ -44,7 +44,7 @@ public class TrailerViewAdapter extends RecyclerView.Adapter<TrailerViewAdapter.
     }
 
     @Override
-    public void onBindViewHolder(TrailerViewAdapter.MyViewHolder holder, int position) {
+    public void onBindViewHolder(final TrailerViewAdapter.MyViewHolder holder, int position) {
 
          final String trailerid = mTrailerList.get(position);
 
@@ -55,12 +55,28 @@ public class TrailerViewAdapter extends RecyclerView.Adapter<TrailerViewAdapter.
                  watchVideoYoutube(mContext,trailerid);
              }
          });
-         holder.ellipsisView.setOnClickListener(new OnClickListener() {
-             @Override
-             public void onClick(View view) {
-                 Toast.makeText(mContext,"share button is clicked",Toast.LENGTH_SHORT).show();
-             }
-         });
+
+         if (position==0){
+             holder.ellipsisView.setVisibility(View.VISIBLE);
+             holder.ellipsisView.setOnClickListener(new OnClickListener() {
+                 @Override
+                 public void onClick(View view) {
+                     Uri trailerUrl = Uri.parse("http://www.youtube.com/watch?v=" + trailerid);
+                     Intent sendIntent = new Intent();
+                     sendIntent.setAction(Intent.ACTION_SEND);
+                     sendIntent.putExtra(Intent.EXTRA_TEXT,trailerUrl.toString());
+                     sendIntent.setType("text/plain");
+                     Intent.createChooser(sendIntent,"Share via");
+                     if (sendIntent.resolveActivity(mContext.getPackageManager())!=null){
+                         mContext.startActivity(sendIntent);
+                     }
+
+                     //    Toast.makeText(mContext,"share button is clicked",Toast.LENGTH_SHORT).show();
+                 }
+             });
+         }
+
+
 
     }
 

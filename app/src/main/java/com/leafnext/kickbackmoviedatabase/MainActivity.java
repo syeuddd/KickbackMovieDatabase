@@ -34,7 +34,6 @@ public class MainActivity extends AppCompatActivity implements OnTaskCompleted,L
     private GridViewAdapter gridViewAdapter;
     private SQLiteDatabase mDb;
     private ArrayList<MovieInfo> movieListFromApi;
-    private ArrayList<MovieInfo> movieListFromDatabase;
     private final String MOVIE_LIST_KEY = "movieListKey";
     private boolean currentViewisDatabase = false;
 
@@ -58,8 +57,6 @@ public class MainActivity extends AppCompatActivity implements OnTaskCompleted,L
         recyclerView.setAdapter(gridViewAdapter);
 
         bar =  findViewById(R.id.progressBar);
-
-        movieListFromDatabase = new ArrayList<>();
 
 
         // show 3 columns in landscape
@@ -112,7 +109,8 @@ public class MainActivity extends AppCompatActivity implements OnTaskCompleted,L
         super.onResume();
         if (currentViewisDatabase) {
 
-            getSupportLoaderManager().initLoader(0, null, this);
+            //getSupportLoaderManager().initLoader(0, null, this);
+            getSupportLoaderManager().restartLoader(0,null,this);
 
         }
         gridViewAdapter.notifyDataSetChanged();
@@ -122,10 +120,13 @@ public class MainActivity extends AppCompatActivity implements OnTaskCompleted,L
 
         URL url = NetworkUtils.buildUrl(sortType);
 
-        if (isDevicedConnected()){
+        if (isDevicedConnected()&& NetworkUtils.isConnected()){
            new FetchMovieAsyncTask(this,bar).execute(url);
         }else {
             Toast.makeText(this, R.string.noInternetErrorMessage,Toast.LENGTH_SHORT).show();
+            gridViewAdapter.setData(null);
+            getSupportLoaderManager().initLoader(0,null,this);
+            currentViewisDatabase = true;
         }
 
     }
@@ -161,6 +162,7 @@ public class MainActivity extends AppCompatActivity implements OnTaskCompleted,L
                 return true;
 
         }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -172,6 +174,7 @@ public class MainActivity extends AppCompatActivity implements OnTaskCompleted,L
 
         return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
     }
+
 
     @Override
     public void onTaskCompleted(ArrayList<MovieInfo> response) {
@@ -189,14 +192,24 @@ public class MainActivity extends AppCompatActivity implements OnTaskCompleted,L
     @Override
     public void onLoadFinished(Loader<ArrayList<MovieInfo>> loader, ArrayList<MovieInfo> data) {
 
-        movieListFromDatabase = data;
-        gridViewAdapter.setData(data);
+        if (data!= null){
+            gridViewAdapter.setData(data);
+            stopLoader(0);
+
+        }else {
+            Toast.makeText(MainActivity.this,"No Movies stored in database",Toast.LENGTH_SHORT).show();
+        }
+
 
     }
 
     @Override
     public void onLoaderReset(Loader<ArrayList<MovieInfo>> loader) {
 
+    }
+
+    void stopLoader(int id){
+        getSupportLoaderManager().destroyLoader(id);
     }
 
     @Override

@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Kickback Movie Database</string>
-    <string name="noInternetErrorMessage">Device is not connected to internet please check the connection and try again</string>
+    <string name="noInternetErrorMessage">Device is not connected to internet</string>
     <string name="movieTitle">Title</string>
     <string name="releaseDate">Release date</string>
     <string name="voteAverage">Vote Average</string>

@@ -92,10 +92,11 @@ public class FetchMoviesFromDatabase extends AsyncTaskLoader<ArrayList<MovieInfo
     }
 
 
-    @Override
-    public void deliverResult(ArrayList<MovieInfo> data) {
-        super.deliverResult(data);
-    }
+//    @Override
+//    public void deliverResult(ArrayList<MovieInfo> data) {
+//
+//        super.deliverResult(data);
+//    }
 
 
 }

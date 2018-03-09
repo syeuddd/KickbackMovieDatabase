@@ -221,7 +221,7 @@ public class Movie_Details_Activity extends AppCompatActivity implements OnTaskC
                         .into(moviePoster);
             }else {
                 Picasso.with(this)
-                        .load(R.drawable.ic_broken_image_black_24dp)
+                        .load(R.drawable.image_not_available_128)
                         .into(moviePoster);
             }
 
@@ -363,4 +363,6 @@ public class Movie_Details_Activity extends AppCompatActivity implements OnTaskC
         }
         return true;
     }
+
+
 }

@@ -3,6 +3,7 @@ package com.leafnext.kickbackmoviedatabase;
 import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,6 +13,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import com.leafnext.kickbackmoviedatabase.model.MovieInfo;
 import com.squareup.picasso.Picasso;
+
+
 
 import java.util.ArrayList;
 
@@ -59,22 +62,32 @@ import java.util.ArrayList;
 
         if (imageUrl.equals("null")){
 
+//            String baseUrl = "http://image.tmdb.org/t/p/w500";
+//
+//            String url = "/nl79FQ8xWZkhL3rDr1v2RFFR6J0.jpg";
+//
+//            Uri baseUri = Uri.parse(baseUrl);
+//
+//            Uri uri = Uri.withAppendedPath(baseUri, url);
+
+
+
             Picasso.with(mContext)
-                    .load(R.drawable.ic_broken_image_black_24dp)
+                    .load(R.drawable.image_not_available_128)
                     .into(holder.mImageView);
-        }else
-            {
+        }else {
 
             String baseUrl = "http://image.tmdb.org/t/p/w500";
 
             Uri baseUri = Uri.parse(baseUrl);
 
-            Uri uri = Uri.withAppendedPath(baseUri,imageUrl);
+            Uri uri = Uri.withAppendedPath(baseUri, imageUrl);
 
 
             Picasso.with(mContext)
                     .load(uri)
                     .into(holder.mImageView);
+            }
 
             holder.itemView.setOnClickListener(new OnClickListener() {
                 @Override
@@ -91,7 +104,7 @@ import java.util.ArrayList;
 
                 }
             });
-        }
+
 
 
     }
