@@ -22,7 +22,7 @@ android {
 
     buildTypes.each {
 
-        it.buildConfigField 'String', 'API_KEY',myApi
+        it.buildConfigField 'String', 'API_KEY', myApi
     }
 }
 
@@ -42,10 +42,12 @@ dependencies {
     })
 
     compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.android.support:appcompat-v7:26.1.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.android.support:recyclerview-v7:26.1.0'
     compile 'com.facebook.stetho:stetho:1.5.0'
+    compile 'com.android.support:design:26.+'
     testCompile 'junit:junit:4.12'
 }

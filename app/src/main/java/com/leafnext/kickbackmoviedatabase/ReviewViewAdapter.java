@@ -1,8 +1,6 @@
 package com.leafnext.kickbackmoviedatabase;
 
 import android.content.Context;
-import android.content.Intent;
-import android.support.v4.widget.TextViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.Layout;
 import android.util.Log;
@@ -10,12 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.leafnext.kickbackmoviedatabase.Utils.ResizeTextView;
 
 import java.util.ArrayList;
 
@@ -54,7 +47,6 @@ public class ReviewViewAdapter extends RecyclerView.Adapter<ReviewViewAdapter.My
 
          final String trailer = mTrailerList.get(position);
 
-         //reviewTextView = holder.trailerView;
 
          holder.trailerView.setText(trailer);
 
@@ -70,10 +62,6 @@ public class ReviewViewAdapter extends RecyclerView.Adapter<ReviewViewAdapter.My
                             ReviewViewAdapter.this.isTextViewClicked = false;
                  }else {
 
-//                            int trailerLength = trailer.length();
-//                            LinearLayout.LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT,trailerLength);
-//
-//                            ReviewViewAdapter.this.reviewTextView.setLayoutParams(params);
                             holder.trailerView.setMaxLines(Integer.MAX_VALUE);
                             ReviewViewAdapter.this.isTextViewClicked = true;
 

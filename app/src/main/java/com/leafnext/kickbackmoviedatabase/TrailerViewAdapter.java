@@ -70,8 +70,6 @@ public class TrailerViewAdapter extends RecyclerView.Adapter<TrailerViewAdapter.
                      if (sendIntent.resolveActivity(mContext.getPackageManager())!=null){
                          mContext.startActivity(sendIntent);
                      }
-
-                     //    Toast.makeText(mContext,"share button is clicked",Toast.LENGTH_SHORT).show();
                  }
              });
          }

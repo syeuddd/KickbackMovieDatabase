@@ -59,8 +59,6 @@ public class MainActivity extends AppCompatActivity implements OnTaskCompleted,L
         bar =  findViewById(R.id.progressBar);
 
 
-        // show 3 columns in landscape
-
         if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
             manager = new StaggeredGridLayoutManager(3,StaggeredGridLayoutManager.VERTICAL);
         }else {
@@ -70,13 +68,6 @@ public class MainActivity extends AppCompatActivity implements OnTaskCompleted,L
         manager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
 
         recyclerView.setLayoutManager(manager);
-
-       // recyclerView.setLayoutManager(new GridLayoutManager(this,3));
-
-        //recyclerView.setLayoutManager(new StaggeredGridLayoutManager(5, StaggeredGridLayoutManager.VERTICAL));
-
-
-
 
         if(savedInstanceState != null) {
 
@@ -109,7 +100,6 @@ public class MainActivity extends AppCompatActivity implements OnTaskCompleted,L
         super.onResume();
         if (currentViewisDatabase) {
 
-            //getSupportLoaderManager().initLoader(0, null, this);
             getSupportLoaderManager().restartLoader(0,null,this);
 
         }
@@ -224,47 +214,4 @@ public class MainActivity extends AppCompatActivity implements OnTaskCompleted,L
 
     }
 
-
-
-    //    private ArrayList<MovieInfo> fetchFavouritesMoviesFromDatabase(){
-//
-//        Cursor cursor = getContentResolver().query(MovieInfoContract.CONTENT_URI,null,null,null,null,null);
-//        ArrayList<MovieInfo> favouriteMovieList = new ArrayList<>();
-//
-//        if (cursor.moveToFirst()) {
-//            for (int i = 0; i < cursor.getCount(); i++) {
-//
-//                int titleIndex = cursor.getColumnIndex(MovieInfoContract.COLUMN_MOVIE_TITLE);
-//                int thumbnailIndex = cursor.getColumnIndex(MovieInfoContract.COLUMN_MOVIE_THUMBNAIL);
-//                int posterIndex = cursor.getColumnIndex(MovieInfoContract.COLUMN_MOVIE_POSTER);
-//                int overviewIndex = cursor.getColumnIndex(MovieInfoContract.COLUMN_MOVIE_OVERVIEW);
-//                int userRatingIndex = cursor.getColumnIndexOrThrow(MovieInfoContract.COLUMN_MOVIE_RATING);
-//                int releaseDateIndex = cursor.getColumnIndex(MovieInfoContract.COLUMN_MOVIE_RELEASE_DATE);
-//
-//                String title = cursor.getString(titleIndex);
-//                String thumbnail = cursor.getString(thumbnailIndex);
-//                String poster = cursor.getString(posterIndex);
-//                String overview = cursor.getString(overviewIndex);
-//                String userRating = cursor.getString(userRatingIndex);
-//                String releaseDate = cursor.getString(releaseDateIndex);
-//
-//                MovieInfo movieInfo = new MovieInfo();
-//                movieInfo.setOriginalTitle(title);
-//                movieInfo.setThumbnailImage(thumbnail);
-//                movieInfo.setPosterImage(poster);
-//                movieInfo.setOverview(overview);
-//                movieInfo.setVoteAverage(userRating);
-//                movieInfo.setReleaseDate(releaseDate);
-//
-//                favouriteMovieList.add(i,movieInfo);
-//
-//
-//            }
-//        }
-//
-//        return favouriteMovieList;
-//    }
-
-
-    // create another method to check for internet connection by pinging to google.com
 }

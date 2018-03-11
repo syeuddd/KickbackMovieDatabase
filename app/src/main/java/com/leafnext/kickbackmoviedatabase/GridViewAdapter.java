@@ -62,16 +62,6 @@ import java.util.ArrayList;
 
         if (imageUrl.equals("null")){
 
-//            String baseUrl = "http://image.tmdb.org/t/p/w500";
-//
-//            String url = "/nl79FQ8xWZkhL3rDr1v2RFFR6J0.jpg";
-//
-//            Uri baseUri = Uri.parse(baseUrl);
-//
-//            Uri uri = Uri.withAppendedPath(baseUri, url);
-
-
-
             Picasso.with(mContext)
                     .load(R.drawable.image_not_available_128)
                     .into(holder.mImageView);
@@ -93,7 +83,7 @@ import java.util.ArrayList;
                 @Override
                 public void onClick(View v) {
 
-                    Intent movieDetailsIntent = new Intent(mContext,Movie_Details_Activity.class);
+                    Intent movieDetailsIntent = new Intent(mContext,MovieDetailsActivity.class);
 
                     movieDetailsIntent.putExtra("movieDetails",selectedMovie);
                     if (selectedMovie.getMovieId()==null){
@@ -104,7 +94,6 @@ import java.util.ArrayList;
 
                 }
             });
-
 
 
     }
