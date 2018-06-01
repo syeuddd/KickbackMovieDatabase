@@ -3,6 +3,14 @@ apply plugin: 'com.android.application'
 
 
 android {
+    signingConfigs {
+        kickbackmoviedatabase_keystore_file {
+            keyAlias 'Kickbackmoviedatasekey'
+            keyPassword 'Q@55word'
+            storeFile file('C:/Users/ehteshs1/Desktop/keystore_file_kickbackmoviedatabase/kickbackmoviedatabase_keystore_file.jks')
+            storePassword 'Q@55word'
+        }
+    }
     compileSdkVersion 26
     buildToolsVersion "27.0.0"
     defaultConfig {
@@ -17,9 +25,9 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.kickbackmoviedatabase_keystore_file
         }
     }
-
     buildTypes.each {
 
         it.buildConfigField 'String', 'API_KEY', myApi
@@ -36,11 +44,10 @@ allprojects {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.squareup.picasso:picasso:2.5.2'

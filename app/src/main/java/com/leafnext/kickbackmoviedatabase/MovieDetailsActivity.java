@@ -259,16 +259,20 @@ public class MovieDetailsActivity extends AppCompatActivity implements OnTaskCom
             movieLength = response.getMovieLength();
         }
 
-        if(response.getTrailers().size() > 0){
-            mTrailerViewAdapter.setData(response.getTrailers());
-        }else {
-            parentLayout.removeView(trailerDivider);
+        if (response.getTrailers()!=null){
+            if(response.getTrailers().size() > 0){
+                mTrailerViewAdapter.setData(response.getTrailers());
+            }else {
+                parentLayout.removeView(trailerDivider);
+            }
         }
 
-        if (response.getReviews().size() > 0){
-            mReviewViewAdapter.setData(response.getReviews());
-        }else {
-            parentLayout.removeView(reviewViewDivider);
+        if (response.getReviews()!=null){
+            if (response.getReviews().size() > 0){
+                mReviewViewAdapter.setData(response.getReviews());
+            }else {
+                parentLayout.removeView(reviewViewDivider);
+            }
         }
 
         movieLengthTextView.setText(movieLength+"min");

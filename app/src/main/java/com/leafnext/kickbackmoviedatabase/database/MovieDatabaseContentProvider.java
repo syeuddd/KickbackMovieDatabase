@@ -14,6 +14,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.widget.Toast;
 
+import com.leafnext.kickbackmoviedatabase.R;
 import com.leafnext.kickbackmoviedatabase.database.MovieDatabaseContract.MovieInfoContract;
 
 /**
@@ -131,7 +132,7 @@ public class MovieDatabaseContentProvider extends ContentProvider{
               numberOfRowsDelted = db.delete(MovieInfoContract.TABLE_NAME,s,strings);
 
               if (numberOfRowsDelted>0){
-                  Toast.makeText(getContext(),uri.toString(),Toast.LENGTH_SHORT).show();
+                  Toast.makeText(getContext(), R.string.favorites_removed_msg,Toast.LENGTH_SHORT).show();
               }
 
 

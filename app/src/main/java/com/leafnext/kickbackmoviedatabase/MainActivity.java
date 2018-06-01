@@ -5,6 +5,7 @@ import android.content.res.Configuration;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +15,7 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -110,10 +112,9 @@ public class MainActivity extends AppCompatActivity implements OnTaskCompleted,L
 
         URL url = NetworkUtils.buildUrl(sortType);
 
-        if (isDevicedConnected()&& NetworkUtils.isConnected()){
+        if (isDevicedConnected()){
            new FetchMovieAsyncTask(this,bar).execute(url);
         }else {
-            Toast.makeText(this, R.string.noInternetErrorMessage,Toast.LENGTH_SHORT).show();
             gridViewAdapter.setData(null);
             getSupportLoaderManager().initLoader(0,null,this);
             currentViewisDatabase = true;
@@ -158,11 +159,16 @@ public class MainActivity extends AppCompatActivity implements OnTaskCompleted,L
 
     private Boolean isDevicedConnected(){
 
-        ConnectivityManager cm = (ConnectivityManager)this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+        NetworkInfo ni = cm.getActiveNetworkInfo();
+        if (ni == null || !ni.isConnected()) {
 
-        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+            View view = findViewById(R.id.mainLayout);
+            Snackbar.make(view, R.string.no_internet_msg,Snackbar.LENGTH_SHORT).show();
+            return false;
+        }
 
-        return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+        return true;
     }
 
 
@@ -187,7 +193,7 @@ public class MainActivity extends AppCompatActivity implements OnTaskCompleted,L
             stopLoader(0);
 
         }else {
-            Toast.makeText(MainActivity.this,"No Movies stored in database",Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, R.string.no_movies_stored_msg,Toast.LENGTH_SHORT).show();
         }
 
 
